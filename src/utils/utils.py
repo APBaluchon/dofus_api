@@ -69,10 +69,26 @@ def get_number_pages(cat: str):
     return max_page
 
 
+def get_all_url(cat: str):
+
+    open(f'data/{cat}_url.txt', 'w').close()
+
+    nb_page = get_number_pages(cat)
+
+    for page in range(1, nb_page+1):
+        url = f"https://www.dofus.com/fr/mmorpg/encyclopedie/{cat}?page={page}"
+
+        soup = get_content_page(url)
+
+        if soup:
+            all_url_html = soup.find("tbody").find_all("a")
+
+            all_url = [link.get('href') for i, link in enumerate(all_url_html) if i % 2 == 0]
+
+        with open(f'data/{cat}_url.txt', 'a') as f:
+            for url in all_url:
+                f.write('https://www.dofus.com' + url + "\n")
+
 
 if __name__ == "__main__":
-    url = "https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/13921-cuir-cuirboule"
-    soup = get_content_page(url)
-    if soup:
-        description = get_description(soup)
-        print(description)
+    get_all_url("ressources")
