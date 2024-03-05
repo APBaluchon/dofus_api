@@ -13,7 +13,7 @@ class FillDB:
         self.collection.replace_one({"_id": data.id}, data.to_json())
     def object_exists(self, data: EntityObject):
         return self.collection.find_one(data.to_json()) != None
-    def id_exists(self, id: int):
+    def id_exists(self, id: str):
         return self.collection.find_one({"_id": id}) != None
     def close(self):
         self.connect.close()
