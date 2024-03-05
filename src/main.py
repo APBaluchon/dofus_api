@@ -6,13 +6,10 @@ from DAO.filldb import FillDB
 from Utils.utils import get_number_pages, get_all_links_from_page, get_all_links
 import time
 
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
 if __name__ == "__main__":
     links = open("src/links/ressources_links.txt", "r").read().split("\n")
     links.pop()
+<<<<<<< HEAD
     db = FillDB("dofusdb", "ressources", os.getenv("password"))
     # number_of_created = 0
     # for i, link in enumerate(links):
@@ -33,4 +30,7 @@ if __name__ == "__main__":
     item_1 = RessourceObject("https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/21966-rune-astrale-majeure")
     db.replace(item_1)
     db.close()
+=======
+    db = FillDB("dofusdb", "ressources")
+>>>>>>> 9dcbf234f938a9ae998f75fb30e3b2b67b967a1e
 
