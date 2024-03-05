@@ -14,22 +14,23 @@ if __name__ == "__main__":
     links = open("src/links/ressources_links.txt", "r").read().split("\n")
     links.pop()
     db = FillDB("dofusdb", "ressources", os.getenv("password"))
+    # number_of_created = 0
+    # for i, link in enumerate(links):
+    #     if (number_of_created+1) % 50 == 0:
+    #         time.sleep(60)
+    #     print(f"{i+1}/{len(links)}")
 
-    for i, link in enumerate(links):
-        print(f"{i+1}/{len(links)}")
-        ressource = RessourceObject(link)
-        if db.exists(ressource):
-            print(f"{ressource.name} already in db")
-            continue
-        else:
-            while True:
-                try:
-                    db.insert(ressource)
-                    break
-                except:
-                    print(f"Error with {ressource.name}")
-                    db.insert(ressource)
-                    time.sleep(5)
-                    continue
-        if (i+1) % 50 == 0:
-            time.sleep(30)
+    #     id = link.split("/")[-1].split("-")[0]
+
+    #     if not db.id_exists(id):
+    #         ressource = RessourceObject(link)
+    #         try:
+    #             db.insert(ressource)
+    #             number_of_created += 1
+    #         except:
+    #             print(f"Error with {ressource.name}")
+    #             continue
+    item_1 = RessourceObject("https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/21966-rune-astrale-majeure")
+    db.replace(item_1)
+    db.close()
+

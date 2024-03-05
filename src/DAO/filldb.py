@@ -9,8 +9,12 @@ class FillDB:
         self.collection.insert_one(data.to_json())
     def insert_many(self, data: list[EntityObject]):
         self.collection.insert_many([item.to_json() for item in data])
-    def exists(self, data: EntityObject):
+    def replace(self, data: EntityObject):
+        self.collection.replace_one({"_id": data.id}, data.to_json())
+    def object_exists(self, data: EntityObject):
         return self.collection.find_one(data.to_json()) != None
+    def id_exists(self, id: int):
+        return self.collection.find_one({"_id": id}) != None
     def close(self):
         self.connect.close()
 

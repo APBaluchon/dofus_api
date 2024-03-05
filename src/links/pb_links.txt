@@ -1,20 +1,2 @@
-251/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/21515-essence-corruption
-252/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/21970-prysmaradite-ambree
-253/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/19237-plume-ilyzaelle
-254/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/21209-bandeau-voapah
-255/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/19234-cendres-chause
-256/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/19971-fronde-boufbos
-257/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/21980-prysmaradite-indigo
-258/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/19963-clef-brasserie-roi-dazak
-259/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/19968-chope-biere
-260/2749
-403 Client Error: Forbidden for url: https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/21206-oeil-crocodaille-albinos
+22058
+21966
