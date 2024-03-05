@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "fm-dofus"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bs4 = "^0.0.2"
+requests = "^2.31.0"
+fastapi = "^0.110.0"
+uvicorn = "^0.27.1"
+pymongo = "^4.6.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

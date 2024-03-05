@@ -1,0 +1,24 @@
+rune,statistiques,rang,over_max
+ini,initiative,1,1010
+pa ini,initiative,3,1010
+ra ini,initiative,10,1010
+vi,vie,1,505
+pa vi,vie,3,505
+ra vi,vie,10,505
+fe,force,1,101
+pa fe,force,3,101
+ra fe,force,10,101
+ine,intelligence,1,101
+pa ine,intelligence,3,101
+ra ine,intelligence,10,101
+age,agilite,1,101
+pa age,agilite,3,101
+ra age,agilite,10,101
+cha,chance,1,101
+pa cha,chance,3,101
+ra cha,chance,10,101
+sa,sagesse,3,33
+pa sa,sagesse,9,33
+ra sa,sagesse,30,33
+prospe,prospection,3,33
+pa prospe,prospection,9,33
