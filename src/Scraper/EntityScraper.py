@@ -1,13 +1,7 @@
-import sys
-from pathlib import Path
-
-dossier_src = Path(__file__).resolve().parent.parent
-sys.path.append(str(dossier_src))
-
 from Utils.utils import get_content_page
 
 
-class GameEntity:
+class EntityScraper:
     """
     Classe pour récupérer les informations d'une entité du jeu Dofus (Item, Familiers, Montures, ...) à partir de son url.
     """
@@ -168,7 +162,7 @@ class GameEntity:
 
 if __name__ == "__main__":
     url = "https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/13917-cervelle-peunch"
-    item = GameEntity(url)
+    item = EntityScraper(url)
     print(item.get_name())
     print(item.get_id())
     print(item.get_type())
