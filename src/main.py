@@ -7,6 +7,9 @@ from Utils.utils import get_number_pages, get_all_links_from_page, get_all_links
 from DAO.ressources_dao import RessourcesDao
 
 if __name__ == "__main__":
-    db = RessourcesDao()
-    print(db.get_ressource_by_id(21966))
+    links = open("links/ressources.txt", "r").read().split("\n")
+    links.pop()
+    
 
+    for link in links:
+        get_id = link.split("/")[-1].split("-")[0]

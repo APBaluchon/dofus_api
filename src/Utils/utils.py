@@ -111,7 +111,8 @@ def get_all_links(cat: str, filepath: str = None) -> None:
     """
     if filepath:
         if os.path.exists(filepath):
-            open(filepath, 'w').close()
+            f = open(filepath, 'w')
+            f.close()
         else:
             open(filepath, 'x').close()
             
@@ -122,6 +123,10 @@ def get_all_links(cat: str, filepath: str = None) -> None:
         links += get_all_links_from_page(cat, i)
 
     if filepath:
+        directory = os.path.dirname(filepath)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
         with open(filepath, 'w') as file:
             for link in links:
                 file.write(link + '\n')
