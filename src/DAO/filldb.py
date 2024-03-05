@@ -2,8 +2,8 @@ from DAO.connect import Connect
 from Object.EntityObject import EntityObject
 
 class FillDB:
-    def __init__(self, db, collection, password):
-        self.connect = Connect(db, collection, password)
+    def __init__(self, db, collection):
+        self.connect = Connect(db, collection)
         self.collection = self.connect.get_collection()
     def insert(self, data: EntityObject):
         self.collection.insert_one(data.to_json())

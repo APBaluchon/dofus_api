@@ -6,14 +6,10 @@ from DAO.filldb import FillDB
 from Utils.utils import get_number_pages, get_all_links_from_page, get_all_links
 import time
 
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
 if __name__ == "__main__":
     links = open("src/links/ressources_links.txt", "r").read().split("\n")
     links.pop()
-    db = FillDB("dofusdb", "ressources", os.getenv("password"))
+    db = FillDB("dofusdb", "ressources")
 
     for i, link in enumerate(links):
         print(f"{i+1}/{len(links)}")
