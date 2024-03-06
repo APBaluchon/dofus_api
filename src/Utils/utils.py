@@ -93,7 +93,7 @@ def get_all_links_from_page(cat: str, page: int) -> list:
 
     return links
 
-def get_all_links(cat: str, filepath: str = None, starting_page: int = 1) -> None:
+def get_all_links(cat: str, filepath: str = None, starting_page: int = 1, nb_page: int = None) -> None:
     """
     Récupère tous les liens des entités d'une catégorie donnée.
 
@@ -116,8 +116,9 @@ def get_all_links(cat: str, filepath: str = None, starting_page: int = 1) -> Non
                 f.close()
         else:
             open(filepath, 'x').close()
-            
-    nb_page = get_number_pages(cat)
+
+    if not nb_page:
+        nb_page = get_number_pages(cat)
 
     links = []
     for i in range(starting_page, nb_page + 1):
