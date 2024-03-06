@@ -163,23 +163,24 @@ def get_category_content(cat: str, soup: BeautifulSoup):
 
 def converts_effects_to_dict(effects: list) -> dict:
     dict_effects = {}
-    for effect in effects:
-        if "+" in effect:
-            stat = find_good_stat(effect)
-            dict_effects[stat] = get_nth_number(effect, 1)
-        else:
-            if "à" in effect:
+    if effects is not None:
+        for effect in effects:
+            if "+" in effect:
                 stat = find_good_stat(effect)
-                dict_effects[stat] = {
-                    "from": get_nth_number(effect, 1),
-                    "to": get_nth_number(effect, 2)
-                }
+                dict_effects[stat] = get_nth_number(effect, 1)
             else:
-                stat = find_good_stat(effect)
-                if stat in stats_without_number:
-                    dict_effects[stat] = effect
+                if "à" in effect:
+                    stat = find_good_stat(effect)
+                    dict_effects[stat] = {
+                        "from": get_nth_number(effect, 1),
+                        "to": get_nth_number(effect, 2)
+                    }
                 else:
-                    dict_effects[stat] = get_nth_number(effect, 1)
+                    stat = find_good_stat(effect)
+                    if stat in stats_without_number:
+                        dict_effects[stat] = effect
+                    else:
+                        dict_effects[stat] = get_nth_number(effect, 1)
     return dict_effects
 
 def get_nth_number(s: str, n: int) -> int:

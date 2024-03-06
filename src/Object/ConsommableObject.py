@@ -22,4 +22,5 @@ class ConsommableObject(EntityObject):
     def to_json(self) -> dict:
         json = super().to_json()
         json['effects'] = converts_effects_to_dict(self.effects)
+        json['conditions'] = self.conditions
         return json

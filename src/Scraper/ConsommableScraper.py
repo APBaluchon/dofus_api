@@ -10,20 +10,29 @@ class ConsommableScraper(EntityScraper):
         return page_contains_category("Effets", self.soup)
 
     def get_effects(self):
-        if self.has_effects():
-            effects = get_category_content("Effets", self.soup).find_all('div', class_='ak-title')
-            effects = [effect.text.strip() for effect in effects]
-            return effects
-        else:
+        try:
+            if self.has_effects():
+                effects = get_category_content("Effets", self.soup).find_all('div', class_='ak-title')
+                effects = [effect.text.strip() for effect in effects]
+                return effects
+            else:
+                return None
+        except Exception as e:
+            print(f"An error occurred: {e}")
             return None
         
-    def has_condition(self):
+    def has_conditions(self):
         return page_contains_category("Conditions", self.soup)
     
     def get_conditions(self):
-        if self.has_condition():
-            conditions = get_category_content("Conditions", self.soup).find_all('div', class_='ak-title')
-            conditions = [condition.text.strip() for condition in conditions]
-            return conditions
-        else:
+        try:
+            if self.has_conditions():
+                conditions = get_category_content("Conditions", self.soup).find_all('div', class_='ak-title')
+                if conditions:
+                    conditions = [condition.text.strip() for condition in conditions]
+                    return conditions
+            else:
+                return []
+        except Exception as e:
+            print(f"An error occurred: {e}")
             return None
