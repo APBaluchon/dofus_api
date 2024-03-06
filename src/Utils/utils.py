@@ -147,3 +147,12 @@ def get_category_content(cat: str, soup: BeautifulSoup):
             cat_content = title.find_next('div', class_='ak-panel-content')
             return cat_content
     return None
+
+def converts_effects_to_dict(effects: list) -> dict:
+    dict_effects = {}
+    for effect in effects:
+        if "+" in effect:
+            print("ok")
+            stat = effect.split(" ")[1]
+            dict_effects[stat] = int(effect[1])
+    return dict_effects
