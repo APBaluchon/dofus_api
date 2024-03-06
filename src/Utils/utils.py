@@ -131,4 +131,18 @@ def get_all_links(cat: str, filepath: str = None, starting_page: int = 1) -> Non
         with open(filepath, 'w') as file:
             for link in links:
                 file.write(link + '\n')
-    
+
+def page_contains_category(cat: str, soup: BeautifulSoup) -> bool:
+    titles = soup.find_all('div', class_='ak-panel-title')
+    for title in titles:
+        if cat in title.get_text():
+            return True
+    return False
+
+def get_category_content(cat: str, soup: BeautifulSoup):
+    titles = soup.find_all('div', class_='ak-panel-title')
+    for title in titles:
+        if cat in title.get_text():
+            cat_content = title.find_next('div', class_='ak-panel-content')
+            return cat_content
+    return None
