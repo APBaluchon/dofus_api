@@ -4,6 +4,7 @@ from Object.RessourceObject import RessourceObject
 from Object.ConsommableObject import ConsommableObject
 from Scraper.ConsommableScraper import ConsommableScraper
 from Scraper.EntityScraper import EntityScraper
+from Utils import metiers_utils as mu
 from DAO.filldb import FillDB
 from Utils.utils import get_number_pages, get_all_links_from_page, get_all_links, get_category_content, page_contains_category
 from DAO.object_dao import ObjectDao
