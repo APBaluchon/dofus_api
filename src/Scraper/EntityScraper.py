@@ -1,4 +1,4 @@
-from Utils.utils import get_content_page
+from Utils.utils import get_content_page, page_contains_category, get_category_content
 
 
 class EntityScraper:
@@ -127,13 +127,9 @@ class EntityScraper:
         >>> print(item.get_description())
         """
         try:
-            titles = self.soup.find_all('div', class_='ak-panel-title')
-            for title in titles:
-                if "Description" in title.get_text():
-                    description_content = title.find_next('div', class_='ak-panel-content')
-                    if description_content:
-                        description = description_content.get_text(strip=True)
-                        return description
+            if page_contains_category("Description", self.soup):
+                description_content = get_category_content("Description", self.soup)
+                return description_content.get_text().strip()
             return None
         except AttributeError:
             return None
