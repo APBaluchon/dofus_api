@@ -5,6 +5,19 @@ import os
 headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 }
+available_stat = {
+    "AGILITÉ" : "Agilité",
+    "CHANCE" : "Chance",
+    "FORCE" : "Force",
+    "INTELLIGENCE" : "Intelligence",
+    "SAGESSE" : "Sagesse",
+    "APPLIQUE UN BONUS" : "Bonus",
+    "CRAFT COOPÉRATIF IMPOSSIBLE" : "Malus",
+    "ÉNERGIE" : "Energie",
+    "VIE" : "Vie"
+}
+
+stats_without_number = ["Bonus", "Malus"]
 
 def get_content_page(url: str) -> BeautifulSoup:
     """
@@ -152,7 +165,35 @@ def converts_effects_to_dict(effects: list) -> dict:
     dict_effects = {}
     for effect in effects:
         if "+" in effect:
-            print("ok")
-            stat = effect.split(" ")[1]
-            dict_effects[stat] = int(effect[1])
+            stat = find_good_stat(effect)
+            dict_effects[stat] = get_nth_number(effect, 1)
+        else:
+            if "à" in effect:
+                stat = find_good_stat(effect)
+                dict_effects[stat] = {
+                    "from": get_nth_number(effect, 1),
+                    "to": get_nth_number(effect, 2)
+                }
+            else:
+                stat = find_good_stat(effect)
+                if stat in stats_without_number:
+                    dict_effects[stat] = effect
+                else:
+                    dict_effects[stat] = get_nth_number(effect, 1)
     return dict_effects
+
+def get_nth_number(s: str, n: int) -> int:
+    s = add_spaces(s)
+    numbers = [int(s) for s in s.split() if s.isdigit()]
+    return numbers[n - 1] if len(numbers) >= n else 0
+
+def find_good_stat(s: str) -> str:
+    for stat in available_stat:
+        if stat in s.upper():
+            return available_stat[stat]
+        
+def add_spaces(s: str) -> str:
+    s = s.replace("+", "+ ")
+    s = s.replace("-", "- ")
+    return s
+    
