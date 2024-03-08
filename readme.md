@@ -4,16 +4,16 @@ Create a `.env` file or remove the `.example` from the `.env.example` file, then
 
 # Roadmap
 
-[x] Ressources
-[x] Consommables
-[] Métiers
-[] Montures
-[] Familiers
-[] Panoplies
-[] Equipements
-[] Armes
-[] Bestiaire
-[] Classes
-[] Objets d'apparat
-[] Compagnon
-[] Havres-Sacs
+-[x] Ressources
+-[x] Consommables
+-[] Métiers
+-[] Montures
+-[] Familiers
+-[] Panoplies
+-[] Equipements
+-[] Armes
+-[] Bestiaire
+-[] Classes
+-[] Objets d'apparat
+-[] Compagnon
+-[] Havres-Sacs
