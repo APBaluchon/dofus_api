@@ -1,3 +1,6 @@
+# Project
+Project to create a NoSql database with the entire Dofus encyclopaedia, with the aim of creating an api.
+
 # Quick Start
 
 - Create a `.env` file, or rename the `.env.example` file to `.env`.
@@ -7,8 +10,8 @@
 
 - [x] Ressources
 - [x] Consommables
-- [ ] Métiers
 - [ ] Montures
+- [ ] Métiers
 - [ ] Familiers
 - [ ] Panoplies
 - [ ] Equipements
