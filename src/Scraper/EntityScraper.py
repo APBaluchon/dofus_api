@@ -154,6 +154,12 @@ class EntityScraper:
             return image
         except AttributeError:
             return None
+        
+    def has_effects(self):
+        return page_contains_category("Effets", self.soup)
+    
+    def has_conditions(self):
+        return page_contains_category("Conditions", self.soup)
 
 
 if __name__ == "__main__":

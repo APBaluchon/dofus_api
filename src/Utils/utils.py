@@ -14,7 +14,10 @@ available_stat = {
     "APPLIQUE UN BONUS" : "Bonus",
     "CRAFT COOPÉRATIF IMPOSSIBLE" : "Malus",
     "ÉNERGIE" : "Energie",
-    "VIE" : "Vie"
+    "VIE" : "Vie",
+    "INITIATIVE" : "Initiative",
+    "VITALITÉ" : "Vitalité",
+    "INVOCATION" : "Invocation"
 }
 
 stats_without_number = ["Bonus", "Malus"]
@@ -165,6 +168,7 @@ def converts_effects_to_dict(effects: list) -> dict:
     dict_effects = {}
     if effects is not None:
         for effect in effects:
+            effect.replace("{~ps}{~zs}", "")
             if "+" in effect:
                 stat = find_good_stat(effect)
                 dict_effects[stat] = get_nth_number(effect, 1)
@@ -181,6 +185,7 @@ def converts_effects_to_dict(effects: list) -> dict:
                         dict_effects[stat] = effect
                     else:
                         dict_effects[stat] = get_nth_number(effect, 1)
+            
     return dict_effects
 
 def get_nth_number(s: str, n: int) -> int:

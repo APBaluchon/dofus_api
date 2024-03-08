@@ -6,7 +6,7 @@ from pymongo.errors import PyMongoError
 from Object.EntityObject import EntityObject
 from Object.ConsommableObject import ConsommableObject
 from Object.RessourceObject import RessourceObject
-from DAO.connect import Connect
+from DAO.Connect import Connect
 
 class DB:
     def __init__(self, db_name: str):
