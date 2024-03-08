@@ -1,4 +1,5 @@
 import requests
+import re
 from bs4 import BeautifulSoup
 from Utils import utils as ut
 import os
@@ -83,6 +84,8 @@ def get_content_metier(url: str):
     metier_content = None
 
     if soup:
+        id = ''.join(re.findall(r'\d', url))
+
         title = soup.find("h1", {"class": "ak-return-link"}).get_text(strip=True)
 
         desc = soup.find('div', class_='ak-panel-content').find('p').get_text(strip=True)
@@ -107,6 +110,6 @@ def get_content_metier(url: str):
             level = recette.find_all('td')[2].get_text(strip=True)
             recettes[name] = level
         
-        metier_content = {"name": title, "description": desc, "image": img_link, "recoltes": recoltes, "recette": recettes}
+        metier_content = {"id": id, "name": title, "description": desc, "image": img_link, "recoltes": recoltes, "recette": recettes}
 
     return metier_content
