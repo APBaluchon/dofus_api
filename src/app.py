@@ -1,15 +1,15 @@
 from fastapi import FastAPI, HTTPException
-from DAO.object_dao import ObjectDao
+from DAO.ObjectDAO import ObjectDao
 
 app = FastAPI()
 
 @app.get("/ressources/")
 async def get_all_ressources(limit: int = 10000):
-    return ObjectDao().get_all_objects(limit)
+    return ObjectDao("ressources").get_all_objects(limit)
 
 @app.get("/ressources/{id}")
 async def get_ressource_by_id(id: int):
-    return ObjectDao().get_object_by_id(id)[0]
+    return ObjectDao("ressources").get_object_by_id(id)[0]
 
 @app.get("/consommables/{id}")
 async def get_consommable_by_id(id: int):

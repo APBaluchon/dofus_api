@@ -8,7 +8,7 @@ from Scraper.EntityScraper import EntityScraper
 from Utils import metiers_utils as mu
 from DAO.DB import DB
 from Utils.utils import get_number_pages, get_all_links_from_page, get_all_links, get_category_content, page_contains_category
-from DAO.object_dao import ObjectDao
+from DAO.ObjectDAO import ObjectDao
 import os
 
 if __name__ == "__main__":

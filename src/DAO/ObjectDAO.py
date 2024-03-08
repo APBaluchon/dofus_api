@@ -1,12 +1,13 @@
-from DAO.connect import Connect
+from DAO.DB import DB
 
 class ObjectDao:
     def __init__(self, category: str):
-        self.connect = Connect("dofusdb", category)
-        self.collection = self.connect.get_collection()
+        self.DB = DB("dofusdb")
+        self.collection = self.DB.get_collection(category)
 
     def get_all_objects(self, limit: int = 10000) -> list:
         objects = list(self.collection.find())
+        print(objects)
 
         return objects
     
