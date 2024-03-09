@@ -21,7 +21,7 @@ class DB:
 
     def insert_entity(self, collection_name: str, data: EntityObject):
         collection = self.get_collection(collection_name)
-        if collection:
+        if collection is not None:
             try:
                 collection.insert_one(data.to_json())
             except PyMongoError as e:
@@ -57,7 +57,7 @@ class DB:
 
     def insert_many_entities(self, collection_name: str, data: List[EntityObject]):
         collection = self.get_collection(collection_name)
-        if collection:
+        if collection is not None:
             try:
                 collection.insert_many([item.to_json() for item in data])
             except PyMongoError as e:

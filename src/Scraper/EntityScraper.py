@@ -160,6 +160,9 @@ class EntityScraper:
     
     def has_conditions(self):
         return page_contains_category("Conditions", self.soup)
+    
+    def has_caracteristics(self):
+        return page_contains_category("Caractéristiques", self.soup)
 
 
 if __name__ == "__main__":

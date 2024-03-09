@@ -6,18 +6,56 @@ headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 }
 available_stat = {
-    "AGILITÉ" : "Agilité",
-    "CHANCE" : "Chance",
-    "FORCE" : "Force",
-    "INTELLIGENCE" : "Intelligence",
-    "SAGESSE" : "Sagesse",
-    "APPLIQUE UN BONUS" : "Bonus",
-    "CRAFT COOPÉRATIF IMPOSSIBLE" : "Malus",
-    "ÉNERGIE" : "Energie",
-    "VIE" : "Vie",
-    "INITIATIVE" : "Initiative",
-    "VITALITÉ" : "Vitalité",
-    "INVOCATION" : "Invocation"
+    "AGILITÉ": "Agilité",
+    "CHANCE": "Chance",
+    "FORCE": "Force",
+    "INTELLIGENCE": "Intelligence",
+    "SAGESSE": "Sagesse",
+    "APPLIQUE UN BONUS": "Bonus",
+    "CRAFT COOPÉRATIF IMPOSSIBLE": "Malus",
+    "ÉNERGIE": "Energie",
+    "VIE": "Vie",
+    "INITIATIVE": "Initiative",
+    "VITALITÉ": "Vitalité",
+    "INVOCATION": "Invocation",
+    "TACLE": "Tacle",
+    "SOIN": "Soin",
+    "RÉSISTANCE POUSSÉE": "Résistance poussée",
+    "% CRITIQUE": "% Critique",
+    "% RÉSISTANCE AIR": "% Résistance Air",
+    "% RÉSISTANCE EAU": "% Résistance Eau",
+    "% RÉSISTANCE FEU": "% Résistance Feu",
+    "% RÉSISTANCE NEUTRE": "% Résistance Neutre",
+    "% RÉSISTANCE TERRE": "% Résistance Terre",
+    "DOMMAGES CRITIQUES": "Dommages Critiques",
+    "DOMMAGES POUSSÉE": "Dommages Poussée",
+    "ESQUIVE PA": "Esquive PA",
+    "ESQUIVE PM": "Esquive PM",
+    "FUITE": "Fuite",
+    "INVOCATIONS": "Invocations",
+    "PA": "PA",
+    "PM": "PM",
+    "PORTÉE": "Portée",
+    "PROSPECTION": "Prospection",
+    "PUISSANCE": "Puissance",
+    "RENVOIE DOMMAGES": "Renvoie Dommages",
+    "RETRAIT PA": "Retrait PA",
+    "RETRAIT PM": "Retrait PM",
+    "RÉSISTANCE CRITIQUES": "Résistance Critiques",
+    "RÉSISTANCE POUSSÉE": "Résistance Poussée",
+    "SOINS": "Soins",
+}
+
+caracteristiques = {
+    "GÉNÉRATION": "Génération",
+    "NOMBRE DE PODS": "Nombre de pods",
+    "TEMPS DE GESTATION": "Temps de gestation",
+    "MATURITÉ": "Maturité",
+    "ENERGIE": "Energie",
+    "VITESSE": "Vitesse",
+    "VITESSE DE DÉPLACEMENT": "Vitesse de déplacement",
+    "TAUX D'APPRENTISAGE": "Taux d'apprentisage",
+    "CAPTURABLE": "Capturable"
 }
 
 stats_without_number = ["Bonus", "Malus"]
@@ -138,6 +176,7 @@ def get_all_links(cat: str, filepath: str = None, starting_page: int = 1, nb_pag
 
     links = []
     for i in range(starting_page, nb_page + 1):
+        print(f"Page {i}/{nb_page}")
         links += get_all_links_from_page(cat, i)
 
     if filepath:
@@ -188,15 +227,37 @@ def converts_effects_to_dict(effects: list) -> dict:
             
     return dict_effects
 
+def converts_caracteristics_to_dict(caracteristics: list) -> dict:
+    caracteristics_dict = {}
+    if caracteristics is not None:
+        for caract in caracteristics:
+            caracteristic = find_good_caracteristic(caract)
+            if contains_number(caract):
+                caracteristics_dict[caracteristic] = get_nth_number(caract, 1)
+            else:
+                if "Non" in caract:
+                    caracteristics_dict[caracteristic] = "Non"
+                elif "Oui" in caract:
+                    caracteristics_dict[caracteristic] = "Oui"
+    return caracteristics_dict
+
 def get_nth_number(s: str, n: int) -> int:
     s = add_spaces(s)
     numbers = [int(s) for s in s.split() if s.isdigit()]
     return numbers[n - 1] if len(numbers) >= n else 0
 
+def contains_number(s: str) -> bool:
+    return any(char.isdigit() for char in s)
+
 def find_good_stat(s: str) -> str:
     for stat in available_stat:
         if stat in s.upper():
             return available_stat[stat]
+        
+def find_good_caracteristic(s: str) -> str:
+    for caract in caracteristiques:
+        if caract in s.upper():
+            return caracteristiques[caract]
         
 def add_spaces(s: str) -> str:
     s = s.replace("+", "+ ")
