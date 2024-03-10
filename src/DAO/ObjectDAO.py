@@ -5,13 +5,28 @@ class ObjectDao:
         self.DB = DB("dofusdb")
         self.collection = self.DB.get_collection(category)
 
-    def get_all_objects(self, limit: int = 10000) -> list:
-        objects = list(self.collection.find())
-        print(objects)
+    def get_all_objects(self, limit: int = 10000, **filters) -> list:
+
+        if filters:
+            query = {}
+            for key, value in filters.items():
+                query[key] = { "$eq": value }
+
+            objects = list(self.collection.find(query).limit(limit))
+        else:
+            objects = list(self.collection.find().limit(limit))
 
         return objects
     
-    def get_object_by_id(self, id: int):
-        object = self.collection.find({ "_id": f'{id}' })
+    def get_object_by_id(self, id: int,  **filters):
 
-        return list(object)
+        if filters:
+            query = {"_id": { "$eq": id }}
+            for key, value in filters.items():
+                query[key] = { "$eq": value }
+
+            objects = list(self.collection.find(query))
+        else:
+            objects = list(self.collection.find({ "_id": f'{id}' }))
+
+        return objects
