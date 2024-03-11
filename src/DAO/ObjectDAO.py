@@ -10,7 +10,12 @@ class ObjectDao:
         if filters:
             query = {}
             for key, value in filters.items():
-                query[key] = { "$eq": value }
+                if key == "effects":
+                    query["effects." + value[0]] = {"$exists": True}
+                elif key == "effects_monture":
+                    query["effects.level 1." + value] = {"$exists": True}
+                else:
+                    query[key] = { "$eq": value }
 
             objects = list(self.collection.find(query).limit(limit))
         else:

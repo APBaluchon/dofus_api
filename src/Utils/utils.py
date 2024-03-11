@@ -140,7 +140,12 @@ def get_all_links_from_page(cat: str, page: int) -> list:
     if soup:
         all_links = soup.find_all("span", {"class": "ak-linker"})
 
-        links = [link.a['href'] for link in all_links]
+        links = []
+        for link in all_links:
+            try:
+                links.append(link.a['href'])
+            except TypeError:
+                pass
         links = set(["https://www.dofus.com" + link for link in links])
     else:
         links = []
@@ -173,6 +178,7 @@ def get_all_links(cat: str, filepath: str = None, starting_page: int = 1, nb_pag
         links += get_all_links_from_page(cat, i)
 
     if filepath:
+        open(filepath, 'w').close()
         with open(filepath, 'w') as file:
             for link in links:
                 file.write(link + '\n')
