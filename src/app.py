@@ -16,7 +16,7 @@ async def get_all_ressources(limit: int = 10000, type: str = None, level: str = 
     return result
 
 @app.get("/ressources/{id}")
-async def get_ressource_by_id(id: int, type: str = None, level: int = None):
+async def get_ressource_by_id(id: int):
     return ObjectDao("ressources").get_object_by_id(id)[0]
 
 @app.get("/consommables/{id}")
