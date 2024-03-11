@@ -27,6 +27,27 @@ class MonstreScraper(EntityScraper):
         except AttributeError:
             return None
     
+    def get_zone(self) -> str:
+        """
+        Récupère la zone dans laquelle on peut trouver le monstre.
+
+        Returns
+        -------
+        str
+            La zone dans laquelle vit le monstre
+        """
+        try:
+            contents = self.soup.find_all("div", {"class": "ak-panel-content"})
+
+            if self.has_zone():
+                zone = contents[3].get_text().strip()
+            else:
+                zone = "Aucune"
+
+            return zone
+        except AttributeError:
+            return None
+    
     def get_level(self) -> dict:
         """
         Récupère le niveau de l'entité à partir de la page de l'entité.
@@ -86,6 +107,70 @@ class MonstreScraper(EntityScraper):
             
 
             return drops
+        except AttributeError:
+            return None
+
+
+    def has_zone(self):
+        return utils.page_contains_category("Zone", self.soup)
+
+    def get_characteristics(self) -> dict:
+        """
+        Récupère les caractéristiques d'un monstre donné.
+
+        Returns
+        -------
+        dict
+            Un dictionnaire contenant les caractéristiques du monstre (PV PA PM)
+        """
+        try:
+            contents = self.soup.find_all("div", {"class": "ak-panel-content"})
+
+            carac = dict()
+
+            content = contents[1]
+
+            titles = content.find_all("div", {"class": "ak-title"})
+
+            carac["PV"] = {"min": utils.get_nth_number(titles[0].get_text().strip(), 1), "max": utils.get_nth_number(titles[0].get_text().strip(), 2)}
+
+            carac["PA"] = utils.get_nth_number(titles[1].get_text().strip(), 1)
+
+            carac["PM"] = utils.get_nth_number(titles[2].get_text().strip(), 1)
+            
+            return carac
+        except AttributeError:
+            return None
+
+    def get_resistances(self) -> dict:
+        """
+        Récupère les résistances d'un monstre donné.
+
+        Returns
+        -------
+        dict
+            Un dictionnaire contenant les résistances du monstre
+        """
+        try:
+            contents = self.soup.find_all("div", {"class": "ak-panel-content"})
+
+            res = dict()
+
+            content = contents[2]
+
+            titles = content.find_all("div", {"class": "ak-title"})
+
+            res["Terre"] = {"min": utils.get_nth_number(titles[0].get_text().replace("%", "").strip(), 1), "max": utils.get_nth_number(titles[0].get_text().replace("%", "").strip(), 2)}
+
+            res["Air"] = {"min": utils.get_nth_number(titles[1].get_text().replace("%", "").strip(), 1), "max": utils.get_nth_number(titles[1].get_text().replace("%", "").strip(), 2)}
+
+            res["Feu"] = {"min": utils.get_nth_number(titles[2].get_text().replace("%", "").strip(), 1), "max": utils.get_nth_number(titles[2].get_text().replace("%", "").strip(), 2)}
+
+            res["Eau"] = {"min": utils.get_nth_number(titles[3].get_text().replace("%", "").strip(), 1), "max": utils.get_nth_number(titles[3].get_text().replace("%", "").strip(), 2)}
+
+            res["Neutre"] = {"min": utils.get_nth_number(titles[4].get_text().replace("%", "").strip(), 1), "max": utils.get_nth_number(titles[4].get_text().replace("%", "").strip(), 2)}
+            
+            return res
         except AttributeError:
             return None
 
