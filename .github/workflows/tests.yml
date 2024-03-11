@@ -20,8 +20,7 @@ jobs:
     - name: Install dependencies
       run: poetry install
 
-    - name: Change directrory
-      run: cd src
-
     - name: Run tests
-      run: python -m unittest
+      env:
+        PYTHONPATH: src
+      run: python -m unittest discover src/test
