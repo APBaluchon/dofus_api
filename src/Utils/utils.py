@@ -178,6 +178,7 @@ def get_all_links(cat: str, filepath: str = None, starting_page: int = 1, nb_pag
         links += get_all_links_from_page(cat, i)
 
     if filepath:
+        open(filepath, 'w').close()
         with open(filepath, 'w') as file:
             for link in links:
                 file.write(link + '\n')
