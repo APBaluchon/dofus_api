@@ -41,8 +41,14 @@ async def get_monture_by_id(id: int):
     return ObjectDao("montures").get_object_by_id(id)[0]
 
 @app.get("/montures/")
-async def get_all_montures(limit: int = 10000):
-    return ObjectDao("montures").get_all_objects(limit)
+async def get_all_montures(limit: int = 10000, effects: str = None):
+    filters = {}
+
+    if effects:
+        filters["effects_monture"] = effects
+    
+    result = ObjectDao("montures").get_all_objects(limit, **filters)
+    return result
 
 # @app.get("/metiers/{id}")
 # async def get_metier_by_id(id: int):
