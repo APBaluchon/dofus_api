@@ -93,5 +93,5 @@ class DB:
                 sleep(180)
             else:
                 if num_inserted % 100 == 0:
-                    logging.info(f"{num_inserted} entities inserted")
+                    logging.info(f"{num_inserted} entities inserted.")
                     sleep(180)
