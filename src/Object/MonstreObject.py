@@ -15,6 +15,9 @@ class MonstreObject(EntityObject):
         self.level = scraper.get_level()
         self.image = scraper.get_image()
         self.drops = scraper.get_drops()
+        self.zone = scraper.get_zone()
+        self.characteristcs = scraper.get_characteristics()
+        self.resistances = scraper.get_resistances()
 
     # def to_json(self) -> dict:
     #     json = super().to_json()
