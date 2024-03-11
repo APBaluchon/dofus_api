@@ -20,6 +20,9 @@ jobs:
 
     - name: Install dependencies
       run: poetry install
+    
+    - name: Activate Poetry virtual environment
+      run: poetry shell
 
     - name: Run tests
       env:
