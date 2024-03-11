@@ -6,7 +6,9 @@ from pymongo.errors import PyMongoError
 from Object.EntityObject import EntityObject
 from Object.ConsommableObject import ConsommableObject
 from Object.RessourceObject import RessourceObject
+from Object.MontureObject import MontureObject
 from DAO.Connect import Connect
+from Utils.utils import get_all_links
 
 class DB:
     def __init__(self, db_name: str):
@@ -46,6 +48,8 @@ class DB:
             entity = ConsommableObject(url)
         elif collection_name == "ressources":
             entity = RessourceObject(url)
+        elif collection_name == "montures":
+            entity = MontureObject(url)
         else:
             logging.error("Invalid collection name")
             return
@@ -62,3 +66,9 @@ class DB:
                 collection.insert_many([item.to_json() for item in data])
             except PyMongoError as e:
                 logging.error(f"Error inserting many entities: {e}")
+
+    def fill(self, cat: str):
+        get_all_links(cat, "src/links/temp_links.txt")
+        links = open("src/links/temp_links.txt", "r").read().split("\n")
+        for url in links:
+            self.insert_with_url(cat, url)

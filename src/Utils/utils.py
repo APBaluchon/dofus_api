@@ -38,7 +38,7 @@ available_stat = {
     "PORTÉE": "Portée",
     "PROSPECTION": "Prospection",
     "PUISSANCE": "Puissance",
-    "RENVOIE DOMMAGES": "Renvoie Dommages",
+    "RENVOIE DOMMAGE": "Renvoie Dommage",
     "RETRAIT PA": "Retrait PA",
     "RETRAIT PM": "Retrait PM",
     "RÉSISTANCE CRITIQUES": "Résistance Critiques",
@@ -140,7 +140,12 @@ def get_all_links_from_page(cat: str, page: int) -> list:
     if soup:
         all_links = soup.find_all("span", {"class": "ak-linker"})
 
-        links = [link.a['href'] for link in all_links]
+        links = []
+        for link in all_links:
+            try:
+                links.append(link.a['href'])
+            except TypeError:
+                pass
         links = set(["https://www.dofus.com" + link for link in links])
     else:
         links = []
@@ -163,27 +168,17 @@ def get_all_links(cat: str, filepath: str = None, starting_page: int = 1, nb_pag
     >>> get_all_links("familiers")
     ['https://www.dofus.com/fr/mmorpg/encyclopedie/familiers/12541-dragouf', 'https://www.dofus.com/fr/mmorpg/encyclopedie/familiers/12542-dragoune', ...]
     """
-    if filepath:
-        if os.path.exists(filepath):
-            if starting_page == 1:
-                f = open(filepath, "w")
-                f.close()
-        else:
-            open(filepath, 'x').close()
-
     if not nb_page:
         nb_page = get_number_pages(cat)
 
     links = []
+
     for i in range(starting_page, nb_page + 1):
         print(f"Page {i}/{nb_page}")
         links += get_all_links_from_page(cat, i)
 
     if filepath:
-        directory = os.path.dirname(filepath)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
+        open(filepath, 'w').close()
         with open(filepath, 'w') as file:
             for link in links:
                 file.write(link + '\n')
