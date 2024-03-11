@@ -23,8 +23,16 @@ jobs:
         virtualenvs-create: true
         virtualenvs-in-project: true
         installer-parallel: true
+
     - name: Install dependencies
       run: poetry install
+
+      
+
+    - name: Create .env file
+      run: |
+        echo "username=value" > .env
+        echo "password=another_value" >> .env
   
     - name: Run tests
       env:
