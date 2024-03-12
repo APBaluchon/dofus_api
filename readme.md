@@ -4,9 +4,8 @@ Project to create a NoSql database with the entire Dofus encyclopaedia, with the
 # Quick Start
 - Install poetry, with `pip install poetry`for instance.
 - Install dependencies with `python -m poetry install`.
-- Create a `.env` file, or rename the `.env.example` file to `.env`.
-- Replace the MongoDb username and password with the credentials that have been provided to you.
-- Run `python src/main.py`.
+- Build the docker image with `docker compose build`.
+- Run the app with `docker compose up`.
 
 # Roadmap
 

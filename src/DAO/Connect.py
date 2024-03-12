@@ -1,11 +1,9 @@
 import os
-import dotenv
 from pymongo import MongoClient
 
 
 class Connect:
     def __init__(self):
-        dotenv.load_dotenv(override=True)
         self.MONGODB_HOST = os.environ.get('MONGODB_HOST', 'localhost')
         self.MONGODB_PORT = int(os.environ.get('MONGODB_PORT', '27017'))
         self.MONGODB_USERNAME = os.environ.get('MONGODB_USERNAME')
