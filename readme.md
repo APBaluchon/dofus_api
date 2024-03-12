@@ -2,9 +2,11 @@
 Project to create a NoSql database with the entire Dofus encyclopaedia, with the aim of creating an api.
 
 # Quick Start
-
+- Install poetry, with `pip install poetry`for instance.
+- Install dependencies with `python -m poetry install`.
 - Create a `.env` file, or rename the `.env.example` file to `.env`.
 - Replace the MongoDb username and password with the credentials that have been provided to you.
+- Run `python src/main.py`.
 
 # Roadmap
 
@@ -84,3 +86,18 @@ erDiagram
         json resistances
     }
 ```
+# Interaction diagram
+
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant S as API
+    participant DB as Database
+    U->>DB: Read-only MongoDb credentials
+    U->>S: Item request
+    S->>DB: NoSql request
+    DB-->>S: NoSql result
+    S-->>U: Result as json
+    note over U, S: Possibility to add filters
+```
+
