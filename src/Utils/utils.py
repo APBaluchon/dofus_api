@@ -192,6 +192,13 @@ def page_contains_category(cat: str, soup: BeautifulSoup) -> bool:
             return True
     return False
 
+def page_contains_tab(cat: str, soup: BeautifulSoup) -> bool:
+    titles = soup.find_all('div', class_='ak-container ak-tabs-container')
+    for title in titles:
+        if cat in title.get_text():
+            return True
+    return False
+
 def get_category_content(cat: str, soup: BeautifulSoup):
     titles = soup.find_all('div', class_='ak-panel-title')
     for title in titles:
