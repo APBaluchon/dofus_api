@@ -28,7 +28,7 @@ jobs:
       run: poetry install
 
     - name: Build docker image
-      run: docker compose build -t dofus_api .
+      run: docker build -t dofus_api .
   
     - name: Run tests
       env:
