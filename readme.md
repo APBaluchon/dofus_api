@@ -10,14 +10,77 @@ Project to create a NoSql database with the entire Dofus encyclopaedia, with the
 
 - [x] Ressources
 - [x] Consommables
-- [ ] Montures
-- [ ] Métiers
+- [x] Montures
+- [x] Métiers
 - [ ] Familiers
 - [ ] Panoplies
-- [ ] Equipements
+- [x] Equipements
 - [ ] Armes
-- [ ] Bestiaire
+- [x] Bestiaire
 - [ ] Classes
 - [ ] Objets d'apparat
 - [ ] Compagnon
 - [ ] Havres-Sacs
+
+# Database diagram
+
+```mermaid
+erDiagram
+    RESSOURCES {
+        string id
+        string name
+        string type
+        string level
+        string description
+        string image
+    }
+
+    MONTURES {
+        string id
+        string name
+        json effects
+        json characteristics
+    }
+
+    CONSOMMABLES {
+        string id
+        string name
+        string type
+        string level
+        string description
+        string image
+        json effects
+        json conditions
+    }
+
+    METIERS {
+        string id
+        string name
+        string image
+        string description
+        json recettes
+        json recoltes
+    }
+
+    EQUIPEMENTS {
+        string id
+        string name
+        string type
+        string level
+        string description
+        string image
+        string panoplie
+        json effects
+        json crafts
+    }
+
+    MONSTRES {
+        string id
+        string name
+        string race
+        string zone
+        json drops
+        json characteristics
+        json resistances
+    }
+```
