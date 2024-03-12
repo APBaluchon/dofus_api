@@ -31,8 +31,6 @@ jobs:
       run: docker build -t dofus_api .
   
     - name: Run tests
-      env:
-        PYTHONPATH: src
       run: |
         source .venv/bin/activate
         docker run dofus_api python -m unittest discover src/test
