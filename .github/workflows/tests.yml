@@ -27,16 +27,12 @@ jobs:
     - name: Install dependencies
       run: poetry install
 
-      
-
-    - name: Create .env file
-      run: |
-        echo "username=value" > .env
-        echo "password=another_value" >> .env
+    - name: Build docker image
+      run: docker compose build -t dofus_api .
   
     - name: Run tests
       env:
         PYTHONPATH: src
       run: |
         source .venv/bin/activate
-        python -m unittest discover src/test
+        docker run dofus_api python -m unittest discover src/test
