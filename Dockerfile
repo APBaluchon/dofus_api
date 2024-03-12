@@ -17,6 +17,7 @@ ENV MONGODB_PASSWORD=admin
 ENV MONGODB_HOST=mongodb
 ENV MONGODB_PORT=27017
 ENV MONGODB_DATABASE=dofusdb
+ENV PYTHONPATH="/src"
 
 # Copy init-mongo.sh script into the container
 COPY ./data/init-mongo.sh /docker-entrypoint-initdb.d/init-mongo.sh
