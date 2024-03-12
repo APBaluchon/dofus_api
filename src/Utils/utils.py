@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import os
+import re
+
 
 headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
@@ -237,9 +239,9 @@ def converts_caracteristics_to_dict(caracteristics: list) -> dict:
     return caracteristics_dict
 
 def get_nth_number(s: str, n: int) -> int:
-    s = add_spaces(s)
-    numbers = [int(s) for s in s.split() if s.isdigit()]
+    numbers = [int(num) for num in re.findall(r'-?\d+', s)]
     return numbers[n - 1] if len(numbers) >= n else 0
+
 
 def contains_number(s: str) -> bool:
     return any(char.isdigit() for char in s)

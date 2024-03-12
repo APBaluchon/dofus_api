@@ -99,11 +99,15 @@ class MonstreScraper(EntityScraper):
             drops = dict()
 
             for drop in drops_html:
-                name_item = drop.find("div", class_='ak-title').get_text().strip()
-                drop_percent = drop.find("div", class_='ak-drop-percent').get_text().strip()
+                names_items = drop.find_all("div", class_='ak-title')
+                drops_percents = drop.find("div", class_='ak-drop-percent')
+                for i in range(len(names_items)):
+                    name_item = names_items[i].get_text().strip()
+                    drop_percent = drops_percents.get_text().strip().replace(" %", "")
+                    drops[name_item] = drop_percent
 
             
-                drops[name_item] = drop_percent
+                #drops[name_item] = drop_percent
             
 
             return drops
@@ -160,7 +164,9 @@ class MonstreScraper(EntityScraper):
 
             titles = content.find_all("div", {"class": "ak-title"})
 
-            res["Terre"] = {"min": utils.get_nth_number(titles[0].get_text().replace("%", "").strip(), 1), "max": utils.get_nth_number(titles[0].get_text().replace("%", "").strip(), 2)}
+            res["Terre"] = {
+                "min": utils.get_nth_number(titles[0].get_text().replace("%", "").strip(), 1), 
+                "max": utils.get_nth_number(titles[0].get_text().replace("%", "").strip(), 2)}
 
             res["Air"] = {"min": utils.get_nth_number(titles[1].get_text().replace("%", "").strip(), 1), "max": utils.get_nth_number(titles[1].get_text().replace("%", "").strip(), 2)}
 
