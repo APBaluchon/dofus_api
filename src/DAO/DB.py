@@ -12,7 +12,7 @@ from Utils.utils import get_all_links
 
 class DB:
     def __init__(self, db_name: str):
-        self.db = Connect(db_name).db
+        self.db = Connect().db
 
     def get_collection(self, collection_name: str) -> Optional[Collection]:
         try:

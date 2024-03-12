@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from DAO.ObjectDAO import ObjectDao
 
+
 app = FastAPI()
 
 @app.get("/ressources/")
@@ -61,4 +62,4 @@ async def get_all_montures(limit: int = 10000, effects: str = None):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="localhost", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
