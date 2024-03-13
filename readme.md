@@ -86,6 +86,7 @@ erDiagram
         json resistances
     }
 ```
+
 # Interaction diagram
 
 ```mermaid
