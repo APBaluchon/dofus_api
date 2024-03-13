@@ -20,7 +20,7 @@ class MonstreObject(EntityObject):
 
     def to_json(self) -> dict:
         dic = {
-            "id": self.id,
+            "_id": self.id,
             "name": self.name,
             "race": self.race,
             "drops": self.drops,
