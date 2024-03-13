@@ -2,10 +2,17 @@
 Project to create a NoSql database with the entire Dofus encyclopaedia, with the aim of creating an api.
 
 # Quick Start
+> :warning: You will need to have Docker installed and might need to run the docker commands with administrator privileges.
+
 - Install poetry, with `pip install poetry`for instance.
 - Install dependencies with `python -m poetry install`.
-- Build the docker image with `docker compose build`.
-- Run the app with `docker compose up`.
+- Build the docker image for the database with `docker compose build`.
+- Run the database with `docker compose up -d`.
+- Run the app with `python src/app.py`.
+
+When the app is running, you can find the API swagger on [http://0.0.0.0:8000/docs](http://0.0.0.0:8000/docs)
+
+Once you're done using the app, you can run `docker compose down` to stop the docker container running the Mongo database. 
 
 # Roadmap
 

@@ -1,0 +1,5 @@
+MONGODB_HOST = "localhost"
+MONGODB_PORT = 27017
+MONGODB_USERNAME = "admin"
+MONGODB_PASSWORD = "admin"
+MONGODB_DATABASE = "dofusdb"

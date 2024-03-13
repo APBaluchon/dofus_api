@@ -26,11 +26,8 @@ jobs:
 
     - name: Install dependencies
       run: poetry install
-
-    - name: Build docker image
-      run: docker build -t dofus_api .
   
     - name: Run tests
       run: |
         source .venv/bin/activate
-        docker run dofus_api python -m unittest discover src/test
+        python -m unittest discover src/test

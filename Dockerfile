@@ -25,13 +25,5 @@ COPY ./data/init-mongo.sh /docker-entrypoint-initdb.d/init-mongo.sh
 # Set execute permissions for the script
 RUN chmod +x /docker-entrypoint-initdb.d/init-mongo.sh
 
-# Install any needed dependencies specified with poetry
-RUN pip install poetry
-RUN poetry config virtualenvs.create false
-RUN poetry install
-
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
-
 # Run app.py when the container launches
-CMD ["bash", "-c", "/docker-entrypoint-initdb.d/init-mongo.sh && python src/app.py"]
+CMD ["bash", "-c", "/docker-entrypoint-initdb.d/init-mongo.sh"]

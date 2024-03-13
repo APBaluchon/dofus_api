@@ -1,14 +1,14 @@
-import os
+from dao.config import MONGODB_HOST, MONGODB_PORT, MONGODB_USERNAME, MONGODB_PASSWORD, MONGODB_DATABASE
 from pymongo import MongoClient
 
 
 class Connect:
     def __init__(self):
-        self.MONGODB_HOST = os.environ.get("MONGODB_HOST", "localhost")
-        self.MONGODB_PORT = int(os.environ.get("MONGODB_PORT", "27017"))
-        self.MONGODB_USERNAME = os.environ.get("MONGODB_USERNAME")
-        self.MONGODB_PASSWORD = os.environ.get("MONGODB_PASSWORD")
-        self.MONGODB_DATABASE = os.environ.get("MONGODB_DATABASE")
+        self.MONGODB_HOST = MONGODB_HOST
+        self.MONGODB_PORT = MONGODB_PORT
+        self.MONGODB_USERNAME = MONGODB_USERNAME
+        self.MONGODB_PASSWORD = MONGODB_PASSWORD
+        self.MONGODB_DATABASE = MONGODB_DATABASE
 
         self.client = MongoClient(
             host=self.MONGODB_HOST,
