@@ -90,15 +90,17 @@ async def get_all_metiers(limit: int = 10000, recette: str = None, recolte: str 
     return ObjectDao("metiers").get_all_objects(limit, **filters)
 
 @app.get("/equipements/{id}")
-async def get_metier_by_id(id: int):
+async def get_equipement_by_id(id: int):
     return ObjectDao("equipements").get_object_by_id(id)[0]
 
 @app.get("/equipements/")
-async def get_all_metiers(limit: int = 10000, level: str = None, panoplie: str = None, effect: str = None, craft: str = None):
+async def get_all_equipements(limit: int = 10000, level: str = None, type: str = None, panoplie: str = None, effect: str = None, craft: str = None):
     filters = {}
 
     if level:
         filters["level"] = level
+    if type:
+        filters["type"] = type
     if panoplie:
         filters["panoplie"] = panoplie
     if effect:
