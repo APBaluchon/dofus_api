@@ -12,7 +12,7 @@ from Object.MonstreObject import MonstreObject
 from Object.MetierObject import MetierObject
 from Object.EquipementObject import EquipementObject
 from DAO.Connect import Connect
-from Utils.utils import get_all_links
+from Utils import utils
 
 class DB:
     def __init__(self, db_name: str):
@@ -59,7 +59,11 @@ class DB:
         elif collection_name == "metiers":
             entity = MetierObject(url)
         elif collection_name == "equipements":
+            if utils.get_content_page(url) == "404":
+                return None
             entity = EquipementObject(url)
+            if entity.name is None:
+                raise(AttributeError("Erreur 403"))
         else:
             logging.error("Invalid collection name")
             return
@@ -78,7 +82,7 @@ class DB:
                 logging.error(f"Error inserting many entities: {e}")
 
     def fill(self, cat: str):
-        get_all_links(cat, "src/links/temp_links.txt")
+        utils.get_all_links(cat, "src/links/temp_links.txt")
         links = open("src/links/temp_links.txt", "r").read().split("\n")
         for url in links:
             while True:

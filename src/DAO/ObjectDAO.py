@@ -18,6 +18,8 @@ class ObjectDao:
                     query["recoltes." + value[0]] = {"$exists": True}
                 elif key == "recette":
                     query["recettes." + value[0]] = {"$exists": True}
+                elif key == "crafts":
+                    query["crafts." + value[0]] = {"$exists": True}
                 elif key == "effects_monture":
                     query["effects.level 1." + value] = {"$exists": True}
                 else:
