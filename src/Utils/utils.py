@@ -104,9 +104,9 @@ def get_number_pages(cat: str) -> int:
     soup = get_content_page(url)
 
     if soup:
-        all_opt = soup.find("select", {"class": "ak-select-page"})
+        all_opt = soup.find("ul", {"class": "ak-pagination pagination ak-ajaxloader"})
 
-        pages = [int(childdiv.string) for childdiv in all_opt.find_all('option') if childdiv.string.isdigit()]
+        pages = [int(childdiv.string) for childdiv in all_opt.find_all('a') if childdiv.string.isdigit()]
 
         max_page = max(pages) if pages else 0
     else:
@@ -267,4 +267,70 @@ def add_spaces(s: str) -> str:
     s = s.replace("+", "+ ")
     s = s.replace("-", "- ")
     return s
-    
+
+def get_all_links_from_page_metiers(page: int) -> set:
+    """
+    Récupère tous les liens des entités de la catégorie métiers pour une page donnée.
+
+    Parameters
+    ----------
+    page : int
+        Le numéro de la page pour laquelle on souhaite récupérer les liens.
+
+    Returns
+    -------
+    list
+        La liste des liens des entités de la catégorie métiers pour la page donnée.
+
+    Examples
+    --------
+    >>> get_all_links_from_page_metiers(1)
+    {'https://www.dofus.com/fr/mmorpg/encyclopedie/metiers/45-forgemage-marteaux', 'https://www.dofus.com/fr/mmorpg/encyclopedie/metiers/31-forgeur-haches', ...}
+    """
+    url = "https://www.dofus.com/fr/mmorpg/encyclopedie/metiers" + "?page=" + str(page)
+
+    soup = get_content_page(url)
+
+    if soup:
+        all_links = soup.find_all("div", {"class": "ak-mosaic-item-name"})
+
+        links = [link.a['href'] for link in all_links]
+        links = set(["https://www.dofus.com" + link for link in links])
+    else:
+        links = []
+
+    return links
+
+def get_all_links_metiers(filepath: str = None, starting_page: int = 1) -> None:
+    """
+    Récupère tous les liens des entités de la catégorie métier.
+
+    Parameters
+    ----------
+    filepath : str
+        Le chemin du fichier dans lequel on souhaite stocker les liens.
+
+    Examples
+    --------
+    >>> get_all_links_metiers(")
+    ['https://www.dofus.com/fr/mmorpg/encyclopedie/familiers/12541-dragouf', 'https://www.dofus.com/fr/mmorpg/encyclopedie/familiers/12542-dragoune', ...]
+    """
+    if filepath:
+        if os.path.exists(filepath):
+            if starting_page == 1:
+                f = open(filepath, "w")
+                f.close()
+        else:
+            open(filepath, 'x').close()
+
+    nb_page = 2
+
+    links = []
+    for i in range(starting_page, nb_page + 1):
+        links += get_all_links_from_page_metiers(i)
+
+    if filepath:
+        open(filepath, 'w').close()
+        with open(filepath, 'w') as file:
+            for link in links:
+                file.write(link + '\n')

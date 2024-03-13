@@ -67,13 +67,19 @@ async def get_all_monstres(limit: int = 10000, zone: str = None, race:str = None
 async def get_minstre_by_id(id: int):
     return ObjectDao("monstres").get_object_by_id(id)[0]
 
-# @app.get("/metiers/{id}")
-# async def get_metier_by_id(id: int):
-#     return ObjectDao("metiers").get_object_by_id(id)[0]
-# 
-# @app.get("/metiers/")
-# async def get_all_metiers(limit: int = 10000):
-#     return ObjectDao("metiers").get_all_objects(limit)
+@app.get("/metiers/{id}")
+async def get_metier_by_id(id: int):
+    return ObjectDao("metiers").get_object_by_id(id)[0]
+
+@app.get("/metiers/")
+async def get_all_metiers(limit: int = 10000, recette: str = None, recolte: str = None):
+    filters = {}
+
+    if recette:
+        filters["recette"] = [recette]
+    if recolte:
+        filters["recolte"] = [recolte]
+    return ObjectDao("metiers").get_all_objects(limit, **filters)
 
 if __name__ == "__main__":
     import uvicorn

@@ -9,6 +9,8 @@ from Object.ConsommableObject import ConsommableObject
 from Object.RessourceObject import RessourceObject
 from Object.MontureObject import MontureObject
 from Object.MonstreObject import MonstreObject
+from Object.MetierObject import MetierObject
+from Object.EquipementObject import EquipementObject
 from DAO.Connect import Connect
 from Utils.utils import get_all_links
 
@@ -54,6 +56,10 @@ class DB:
             entity = MontureObject(url)
         elif collection_name == "monstres":
             entity = MonstreObject(url)
+        elif collection_name == "metiers":
+            entity = MetierObject(url)
+        elif collection_name == "equipements":
+            entity = EquipementObject(url)
         else:
             logging.error("Invalid collection name")
             return
