@@ -23,14 +23,29 @@ available_stat = {
     "TACLE": "Tacle",
     "SOIN": "Soin",
     "RÉSISTANCE POUSSÉE": "Résistance poussée",
+    "DOMMAGES D'ARMES": "Dommages d'armes",
+    "% DOMMAGES MÊLÉE":"% Dommages mêlée",
+    "% RÉSISTANCE MÊLÉE":"% Résistance mêlée",
     "% CRITIQUE": "% Critique",
+    "RÉSISTANCE MÊLÉE":"Résistance mêlée",
+    "CRITIQUE": "Critique",
     "% RÉSISTANCE AIR": "% Résistance Air",
     "% RÉSISTANCE EAU": "% Résistance Eau",
     "% RÉSISTANCE FEU": "% Résistance Feu",
     "% RÉSISTANCE NEUTRE": "% Résistance Neutre",
     "% RÉSISTANCE TERRE": "% Résistance Terre",
-    "DOMMAGES CRITIQUES": "Dommages Critiques",
-    "DOMMAGES POUSSÉE": "Dommages Poussée",
+    "RÉSISTANCE AIR": "Résistance Air",
+    "RÉSISTANCE EAU": "Résistance Eau",
+    "RÉSISTANCE FEU": "Résistance Feu",
+    "RÉSISTANCE NEUTRE": "Résistance Neutre",
+    "RÉSISTANCE TERRE": "Résistance Terre",
+    "DOMMAGE AIR": "Dommages Air",
+    "DOMMAGE EAU": "Dommages Eau",
+    "DOMMAGE FEU": "Dommages Feu",
+    "DOMMAGE NEUTRE": "Dommages Neutre",
+    "DOMMAGE TERRE": "Dommages Terre",
+    "DOMMAGE CRITIQUES": "Dommages Critiques",
+    "DOMMAGE POUSSÉE": "Dommages Poussée",
     "ESQUIVE PA": "Esquive PA",
     "ESQUIVE PM": "Esquive PM",
     "FUITE": "Fuite",
@@ -77,6 +92,9 @@ def get_content_page(url: str) -> BeautifulSoup:
         response.raise_for_status()
         return BeautifulSoup(response.text, 'html.parser')
     except requests.exceptions.RequestException as e:
+        if isinstance(e, requests.exceptions.HTTPError) and e.response.status_code == 404:
+            print("Error 404: Page not found")
+            return "404"
         print(e)
         return None
 
@@ -211,13 +229,18 @@ def converts_effects_to_dict(effects: list) -> dict:
     dict_effects = {}
     if effects is not None:
         for effect in effects:
-            effect.replace("{~ps}{~zs}", "")
+            effect = effect.replace("{~ps}{~zs}", "")
             if "+" in effect:
                 stat = find_good_stat(effect)
                 dict_effects[stat] = get_nth_number(effect, 1)
             else:
                 if "à" in effect:
                     stat = find_good_stat(effect)
+                    if stat is not None:
+                        dict_effects[stat] = {
+                            "from": get_nth_number(effect, 1),
+                            "to": get_nth_number(effect, 2)
+                        }
                     dict_effects[stat] = {
                         "from": get_nth_number(effect, 1),
                         "to": get_nth_number(effect, 2)
@@ -227,7 +250,8 @@ def converts_effects_to_dict(effects: list) -> dict:
                     if stat in stats_without_number:
                         dict_effects[stat] = effect
                     else:
-                        dict_effects[stat] = get_nth_number(effect, 1)
+                        if stat is not None:
+                            dict_effects[stat] = get_nth_number(effect, 1)
             
     return dict_effects
 
