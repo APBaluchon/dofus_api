@@ -59,12 +59,12 @@ async def get_all_montures(limit: int = 10000, effects: str = None):
     return result
 
 @app.get("/monstres/")
-async def get_all_monstres(limit: int = 10000, zone: str = None, race:str = None, drops: str = None):
+async def get_all_monstres(limit: int = 10000, zone: str = None, race: str = None, drops: str = None):
     filters = {}
 
     if zone:
         filters["zone"] = zone
-    if zone:
+    if race:
         filters["race"] = race
     if drops:
         filters["drops"] = [drops]
