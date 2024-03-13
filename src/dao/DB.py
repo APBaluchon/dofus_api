@@ -1,5 +1,6 @@
 from typing import List, Optional
 import logging
+import time
 from pymongo.collection import Collection
 from pymongo.database import Database
 from pymongo.errors import PyMongoError
@@ -7,6 +8,9 @@ from object.entity_object import EntityObject
 from object.consommable_object import ConsommableObject
 from object.ressource_object import RessourceObject
 from object.monture_object import MontureObject
+from object.monstre_object import MonstreObject
+from object.metier_object import MetierObject
+from object.equipement_object import EquipementObject
 from dao.connect import Connect
 from utils.utils import get_all_links
 
@@ -51,6 +55,12 @@ class DB:
             entity = RessourceObject(url)
         elif collection_name == "montures":
             entity = MontureObject(url)
+        elif collection_name == "monstres":
+            entity = MonstreObject(url)
+        elif collection_name == "metiers":
+            entity = MetierObject(url)
+        elif collection_name == "equipements":
+            entity = EquipementObject(url)
         else:
             logging.error("Invalid collection name")
             return
@@ -72,4 +82,10 @@ class DB:
         get_all_links(cat, "src/links/temp_links.txt")
         links = open("src/links/temp_links.txt", "r").read().split("\n")
         for url in links:
-            self.insert_with_url(cat, url)
+            while True:
+                try:
+                    self.insert_with_url(cat, url)
+                    break
+                except Exception as e:
+                    print(e, "Retrying in 3 minutes")
+                    time.sleep(180)
