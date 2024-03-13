@@ -12,6 +12,8 @@ class ObjectDao:
             for key, value in filters.items():
                 if key == "effects":
                     query["effects." + value[0]] = {"$exists": True}
+                elif key == "drops":
+                    query["drops." + value[0]] = {"$exists": True}
                 elif key == "effects_monture":
                     query["effects.level 1." + value] = {"$exists": True}
                 else:

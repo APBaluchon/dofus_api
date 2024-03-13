@@ -51,8 +51,16 @@ async def get_all_montures(limit: int = 10000, effects: str = None):
     return result
 
 @app.get("/monstres/")
-async def get_all_monstres(limit: int = 10000):   
-    result = ObjectDao("monstres").get_all_objects(limit)
+async def get_all_monstres(limit: int = 10000, zone: str = None, race:str = None, drops: str = None):
+    filters = {}
+
+    if zone:
+        filters["zone"] = zone
+    if zone:
+        filters["race"] = race
+    if drops:
+        filters["drops"] = [drops]
+    result = ObjectDao("monstres").get_all_objects(limit, **filters)
     return result
     
 @app.get("/monstres/{id}")
