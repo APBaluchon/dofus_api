@@ -1,5 +1,6 @@
 from typing import List, Optional
 import logging
+import time
 from pymongo.collection import Collection
 from pymongo.database import Database
 from pymongo.errors import PyMongoError
@@ -7,6 +8,7 @@ from Object.EntityObject import EntityObject
 from Object.ConsommableObject import ConsommableObject
 from Object.RessourceObject import RessourceObject
 from Object.MontureObject import MontureObject
+from Object.MonstreObject import MonstreObject
 from DAO.Connect import Connect
 from Utils.utils import get_all_links
 
@@ -50,6 +52,8 @@ class DB:
             entity = RessourceObject(url)
         elif collection_name == "montures":
             entity = MontureObject(url)
+        elif collection_name == "monstres":
+            entity = MonstreObject(url)
         else:
             logging.error("Invalid collection name")
             return
@@ -71,4 +75,13 @@ class DB:
         get_all_links(cat, "src/links/temp_links.txt")
         links = open("src/links/temp_links.txt", "r").read().split("\n")
         for url in links:
-            self.insert_with_url(cat, url)
+            while True:
+                try:
+                    self.insert_with_url(cat, url)
+                    break
+                except Exception as e:
+                    print(e, "Retrying in 3 minutes")
+                    if "403 Client Error: Forbidden for url" in e:
+                        time.sleep(180)
+                    else:
+                        break
