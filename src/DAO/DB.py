@@ -4,15 +4,16 @@ import time
 from pymongo.collection import Collection
 from pymongo.database import Database
 from pymongo.errors import PyMongoError
-from Object.EntityObject import EntityObject
-from Object.ConsommableObject import ConsommableObject
-from Object.RessourceObject import RessourceObject
-from Object.MontureObject import MontureObject
-from Object.MonstreObject import MonstreObject
-from Object.MetierObject import MetierObject
-from Object.EquipementObject import EquipementObject
-from DAO.Connect import Connect
-from Utils import utils
+from object.entity_object import EntityObject
+from object.consommable_object import ConsommableObject
+from object.ressource_object import RessourceObject
+from object.monture_object import MontureObject
+from object.monstre_object import MonstreObject
+from object.metier_object import MetierObject
+from object.equipement_object import EquipementObject
+from dao.connect import Connect
+from utils import utils
+
 
 class DB:
     def __init__(self, db_name: str):
@@ -63,7 +64,7 @@ class DB:
                 return None
             entity = EquipementObject(url)
             if entity.name is None:
-                raise(AttributeError("Erreur 403"))
+                raise (AttributeError("Erreur 403"))
         else:
             logging.error("Invalid collection name")
             return

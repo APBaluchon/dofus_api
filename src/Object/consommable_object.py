@@ -1,15 +1,16 @@
-from Object.EntityObject import EntityObject
-from Scraper.EquipementScraper import EquipementScraper
-from Utils import utils
+from object.entity_object import EntityObject
+from scraper.consommable_scraper import ConsommableScraper
+from utils.utils import converts_effects_to_dict
 
-class EquipementObject(EntityObject):
+
+class ConsommableObject(EntityObject):
     def __init__(self, url: str):
         self.effects = []
         self.conditions = []
         super().__init__(url)
-        
+
     def use_scraper(self):
-        scraper = EquipementScraper(self.url)
+        scraper = ConsommableScraper(self.url)
         self.name = scraper.get_name()
         self.id = scraper.get_id()
         self.type = scraper.get_type()
@@ -17,13 +18,10 @@ class EquipementObject(EntityObject):
         self.description = scraper.get_description()
         self.image = scraper.get_image()
         self.effects = scraper.get_effects()
-        self.panoplie = scraper.get_panoplie()
-        self.crafts = scraper.get_crafts()
+        self.conditions = scraper.get_conditions()
 
     def to_json(self) -> dict:
         json = super().to_json()
-        json['effects'] = utils.converts_effects_to_dict(self.effects)
-        json['crafts'] = self.crafts
-        if self.panoplie:
-            json['panoplie'] = self.panoplie
+        json["effects"] = converts_effects_to_dict(self.effects)
+        json["conditions"] = self.conditions
         return json
