@@ -100,3 +100,54 @@ sequenceDiagram
     note over U, S: Possibility to add filters
 ```
 
+# Class diagram (not done yet)
+
+```mermaid
+---
+title: Class diagram
+---
+classDiagram
+    class DAO{
+        +get_all_objects(**filters)
+        +get_object_by_id(id: int)
+    }
+    class Object{
+        +string name
+        +int id
+        +string type
+        +int level
+        +string description
+        +string image
+        +string url
+        +use_scraper()
+        +to_json()
+    }
+    class Scraper{
+        +get_name()
+        +get_id()
+        +get_type()
+        +get_level()
+        +get_description()
+        +get_image()
+        +has_effects()
+        +has_conditions()
+        +has_characteristics()
+    }
+    class Utils{
+        +get_content_page(url: string)
+        +get_number_pages(category: string)
+        +get_all_links_from_page(category: string, page: int)
+        +get_all_links(category: string, filepath: string, starting_page: int, nb_page: int)
+        +page_contains_category(category: string, soup: BeautifulSoup)
+        +page_contains_tab(category: string, soup: BeautifulSoup)
+        +get_category_content(category: string, soup: BeautifulSoup)
+        +convert_effects_to_dict(effects: list)
+        +convert_characteristics_to_dict(characteristics: list)
+        +get_nth_number(text: string, number: int)
+        +contains_number(text: string)
+        +find_good_stat(text: string)
+        +find_good_characteristics(text: string)
+        +add_spaces(text: string)
+    }
+
+```
