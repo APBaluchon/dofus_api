@@ -17,7 +17,7 @@ class MetierObject(EntityObject):
 
     def to_json(self) -> dict:
         dic = {
-                "id": self.id,
+                "_id": self.id,
                 "name": self.name,
                 "image": self.image,
                 "description": self.desc
