@@ -81,7 +81,4 @@ class DB:
                     break
                 except Exception as e:
                     print(e, "Retrying in 3 minutes")
-                    if "403 Client Error: Forbidden for url" in e:
-                        time.sleep(180)
-                    else:
-                        break
+                    time.sleep(180)
