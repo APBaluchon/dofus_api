@@ -4,7 +4,7 @@ import re
 
 
 headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
 }
 available_stat = {
     "AGILITÉ": "Agilité",
@@ -56,15 +56,16 @@ caracteristiques = {
     "VITESSE": "Vitesse",
     "VITESSE DE DÉPLACEMENT": "Vitesse de déplacement",
     "TAUX D'APPRENTISAGE": "Taux d'apprentisage",
-    "CAPTURABLE": "Capturable"
+    "CAPTURABLE": "Capturable",
 }
 
 stats_without_number = ["Bonus", "Malus"]
 
+
 def get_content_page(url: str) -> BeautifulSoup:
     """
     Récupère le contenu de la page de l'entité et le stocke dans l'attribut soup.
-       
+
     Examples
     --------
     >>> url = "https://www.dofus.com/fr/mmorpg/encyclopedie/familiers/12541-dragouf"
@@ -74,10 +75,11 @@ def get_content_page(url: str) -> BeautifulSoup:
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        return BeautifulSoup(response.text, 'html.parser')
+        return BeautifulSoup(response.text, "html.parser")
     except requests.exceptions.RequestException as e:
         print(e)
         return None
+
 
 def get_number_pages(cat: str) -> int:
     """
@@ -105,13 +107,18 @@ def get_number_pages(cat: str) -> int:
     if soup:
         all_opt = soup.find("select", {"class": "ak-select-page"})
 
-        pages = [int(childdiv.string) for childdiv in all_opt.find_all('option') if childdiv.string.isdigit()]
+        pages = [
+            int(childdiv.string)
+            for childdiv in all_opt.find_all("option")
+            if childdiv.string.isdigit()
+        ]
 
         max_page = max(pages) if pages else 0
     else:
         max_page = 0
 
     return max_page
+
 
 def get_all_links_from_page(cat: str, page: int) -> list:
     """
@@ -144,7 +151,7 @@ def get_all_links_from_page(cat: str, page: int) -> list:
         links = []
         for link in all_links:
             try:
-                links.append(link.a['href'])
+                links.append(link.a["href"])
             except TypeError:
                 pass
         links = set(["https://www.dofus.com" + link for link in links])
@@ -153,7 +160,10 @@ def get_all_links_from_page(cat: str, page: int) -> list:
 
     return links
 
-def get_all_links(cat: str, filepath: str = None, starting_page: int = 1, nb_page: int = None) -> None:
+
+def get_all_links(
+    cat: str, filepath: str = None, starting_page: int = 1, nb_page: int = None
+) -> None:
     """
     Récupère tous les liens des entités d'une catégorie donnée.
 
@@ -179,32 +189,36 @@ def get_all_links(cat: str, filepath: str = None, starting_page: int = 1, nb_pag
         links += get_all_links_from_page(cat, i)
 
     if filepath:
-        open(filepath, 'w').close()
-        with open(filepath, 'w') as file:
+        open(filepath, "w").close()
+        with open(filepath, "w") as file:
             for link in links:
-                file.write(link + '\n')
+                file.write(link + "\n")
+
 
 def page_contains_category(cat: str, soup: BeautifulSoup) -> bool:
-    titles = soup.find_all('div', class_='ak-panel-title')
+    titles = soup.find_all("div", class_="ak-panel-title")
     for title in titles:
         if cat in title.get_text():
             return True
     return False
+
 
 def page_contains_tab(cat: str, soup: BeautifulSoup) -> bool:
-    titles = soup.find_all('div', class_='ak-container ak-tabs-container')
+    titles = soup.find_all("div", class_="ak-container ak-tabs-container")
     for title in titles:
         if cat in title.get_text():
             return True
     return False
 
+
 def get_category_content(cat: str, soup: BeautifulSoup):
-    titles = soup.find_all('div', class_='ak-panel-title')
+    titles = soup.find_all("div", class_="ak-panel-title")
     for title in titles:
         if cat in title.get_text():
-            cat_content = title.find_next('div', class_='ak-panel-content')
+            cat_content = title.find_next("div", class_="ak-panel-content")
             return cat_content
     return None
+
 
 def converts_effects_to_dict(effects: list) -> dict:
     dict_effects = {}
@@ -219,7 +233,7 @@ def converts_effects_to_dict(effects: list) -> dict:
                     stat = find_good_stat(effect)
                     dict_effects[stat] = {
                         "from": get_nth_number(effect, 1),
-                        "to": get_nth_number(effect, 2)
+                        "to": get_nth_number(effect, 2),
                     }
                 else:
                     stat = find_good_stat(effect)
@@ -227,8 +241,9 @@ def converts_effects_to_dict(effects: list) -> dict:
                         dict_effects[stat] = effect
                     else:
                         dict_effects[stat] = get_nth_number(effect, 1)
-            
+
     return dict_effects
+
 
 def converts_caracteristics_to_dict(caracteristics: list) -> dict:
     caracteristics_dict = {}
@@ -244,26 +259,29 @@ def converts_caracteristics_to_dict(caracteristics: list) -> dict:
                     caracteristics_dict[caracteristic] = "Oui"
     return caracteristics_dict
 
+
 def get_nth_number(s: str, n: int) -> int:
-    numbers = [int(num) for num in re.findall(r'-?\d+', s)]
+    numbers = [int(num) for num in re.findall(r"-?\d+", s)]
     return numbers[n - 1] if len(numbers) >= n else 0
 
 
 def contains_number(s: str) -> bool:
     return any(char.isdigit() for char in s)
 
+
 def find_good_stat(s: str) -> str:
     for stat in available_stat:
         if stat in s.upper():
             return available_stat[stat]
-        
+
+
 def find_good_caracteristic(s: str) -> str:
     for caract in caracteristiques:
         if caract in s.upper():
             return caracteristiques[caract]
-        
+
+
 def add_spaces(s: str) -> str:
     s = s.replace("+", "+ ")
     s = s.replace("-", "- ")
     return s
-    

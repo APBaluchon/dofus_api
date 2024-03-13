@@ -1,10 +1,12 @@
-from Object.EntityObject import EntityObject
-from Scraper.RessourceScraper import RessourceScraper
+from object.entity_object import EntityObject
+from scraper.ressource_scraper import RessourceScraper
+
 
 class RessourceObject(EntityObject):
     """
     Répresente une ressource du jeu
     """
+
     def __init__(self, url: str):
         """
         Initialise une ressource
@@ -30,7 +32,7 @@ class RessourceObject(EntityObject):
             L'image de la ressource
         """
         super().__init__(url)
-        
+
     def use_scraper(self):
         """
         Utilise un scraper pour récupérer les informations de la ressource.

@@ -1,10 +1,11 @@
-from Utils.utils import get_content_page, page_contains_category, get_category_content
+from utils.utils import get_content_page, page_contains_category, get_category_content
 
 
 class EntityScraper:
     """
     Classe pour récupérer les informations d'une entité du jeu Dofus (Item, Familiers, Montures, ...) à partir de son url.
     """
+
     def __init__(self, url: str):
         """
         Parameters
@@ -43,11 +44,11 @@ class EntityScraper:
         >>> print(item.get_name())
         """
         try:
-            name = self.soup.find("h1", class_='ak-return-link').text.strip()
+            name = self.soup.find("h1", class_="ak-return-link").text.strip()
             return name
         except AttributeError:
             return None
-    
+
     def get_id(self) -> str:
         """
         Récupère l'ID de l'entité à partir de l'URL.
@@ -85,7 +86,12 @@ class EntityScraper:
         >>> print(item.get_type())
         """
         try:
-            type = self.soup.find("div", {"class": "ak-encyclo-detail-type"}).get_text().strip().replace("Type : ", "")
+            type = (
+                self.soup.find("div", {"class": "ak-encyclo-detail-type"})
+                .get_text()
+                .strip()
+                .replace("Type : ", "")
+            )
             return type
         except AttributeError:
             return None
@@ -106,7 +112,12 @@ class EntityScraper:
         >>> print(item.get_level())
         """
         try:
-            level = self.soup.find("div", {"class": "ak-encyclo-detail-level"}).get_text(strip=True).replace("Niveau : ", "").strip()
+            level = (
+                self.soup.find("div", {"class": "ak-encyclo-detail-level"})
+                .get_text(strip=True)
+                .replace("Niveau : ", "")
+                .strip()
+            )
             return level
         except AttributeError:
             return None
@@ -133,7 +144,7 @@ class EntityScraper:
             return None
         except AttributeError:
             return None
-        
+
     def get_image(self) -> str:
         """
         Récupère l'url de l'image de l'entité à partir de la page de l'entité.
@@ -150,27 +161,18 @@ class EntityScraper:
         >>> print(item.get_image())
         """
         try:
-            image = self.soup.find("div", class_='ak-encyclo-detail-illu').find("img")['src']
+            image = self.soup.find("div", class_="ak-encyclo-detail-illu").find("img")[
+                "src"
+            ]
             return image
         except AttributeError:
             return None
-        
+
     def has_effects(self):
         return page_contains_category("Effets", self.soup)
-    
+
     def has_conditions(self):
         return page_contains_category("Conditions", self.soup)
-    
+
     def has_caracteristics(self):
         return page_contains_category("Caractéristiques", self.soup)
-
-
-if __name__ == "__main__":
-    url = "https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/13917-cervelle-peunch"
-    item = EntityScraper(url)
-    print(item.get_name())
-    print(item.get_id())
-    print(item.get_type())
-    print(item.get_level())
-    print(item.get_description())
-    print(item.get_image())

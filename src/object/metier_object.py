@@ -1,13 +1,13 @@
-from Object.EntityObject import EntityObject
-from Scraper.MetierScraper import MetierScraper
-from Utils.utils import converts_effects_to_dict
+from object.entity_object import EntityObject
+from scraper.metier_scraper import MetierScraper
+
 
 class MetierObject(EntityObject):
     def __init__(self, url: str):
         self.drops = dict()
         self.scraper = None
         super().__init__(url)
-        
+
     def use_scraper(self):
         self.scraper = MetierScraper(self.url)
         self.name = self.scraper.get_name()
@@ -17,11 +17,11 @@ class MetierObject(EntityObject):
 
     def to_json(self) -> dict:
         dic = {
-                "id": self.id,
-                "name": self.name,
-                "image": self.image,
-                "description": self.desc
-            }
+            "id": self.id,
+            "name": self.name,
+            "image": self.image,
+            "description": self.desc,
+        }
         if self.scraper.has_recettes():
             dic["recettes"] = self.scraper.get_recettes()
         if self.scraper.has_recoltes():

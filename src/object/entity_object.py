@@ -1,10 +1,11 @@
-from Scraper.EntityScraper import EntityScraper
+from scraper.entity_scraper import EntityScraper
 
 
 class EntityObject:
     """
     Répresente une entité du jeu
     """
+
     def __init__(self, url: str):
         """
 
@@ -27,7 +28,7 @@ class EntityObject:
             La description de l'entité
         image : str
             L'image de l'entité
-            
+
         Examples
         --------
         >>> url = "https://www.dofus.com/fr/mmorpg/encyclopedie/ressources/13917-cervelle-peunch"
@@ -69,5 +70,5 @@ class EntityObject:
             "type": self.type,
             "level": self.level,
             "description": self.description,
-            "image": self.image
+            "image": self.image,
         }

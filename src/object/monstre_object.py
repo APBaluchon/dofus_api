@@ -1,13 +1,13 @@
-from Object.EntityObject import EntityObject
-from Scraper.MonstreScraper import MonstreScraper
-from Utils.utils import converts_effects_to_dict
+from object.entity_object import EntityObject
+from scraper.monstre_scraper import MonstreScraper
+
 
 class MonstreObject(EntityObject):
     def __init__(self, url: str):
         self.drops = dict()
         self.scraper = None
         super().__init__(url)
-        
+
     def use_scraper(self):
         self.scraper = MonstreScraper(self.url)
         self.name = self.scraper.get_name()
@@ -20,13 +20,13 @@ class MonstreObject(EntityObject):
 
     def to_json(self) -> dict:
         dic = {
-                "id": self.id,
-                "name": self.name,
-                "race": self.race,
-                "drops": self.drops,
-                "caracteristics": self.characteristics,
-                "resistances": self.scraper.get_resistances()
-            }
+            "id": self.id,
+            "name": self.name,
+            "race": self.race,
+            "drops": self.drops,
+            "caracteristics": self.characteristics,
+            "resistances": self.scraper.get_resistances(),
+        }
         if self.scraper.has_zone():
             dic["zone"] = self.scraper.get_zone()
         return dic

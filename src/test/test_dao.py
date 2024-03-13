@@ -1,13 +1,15 @@
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
-from DAO.ObjectDAO import ObjectDao
+from dao.object_dao import ObjectDao
 
 
 class TestObjectDAO(unittest.TestCase):
     def setUp(self):
         self.mock_cursor = MagicMock()
-        self.mock_cursor.limit.return_value = self.mock_cursor  # Ensure the cursor is chainable
+        self.mock_cursor.limit.return_value = (
+            self.mock_cursor
+        )  # Ensure the cursor is chainable
         self.mock_collection = MagicMock()
         self.mock_collection.find.return_value = self.mock_cursor
         self.mock_db = MagicMock()
@@ -49,8 +51,16 @@ class TestObjectDAO(unittest.TestCase):
     def test_read_all_filtering_ok(self):
         level = 200
 
-        first_query_results = [{"name": "Object 1", "level": level}, {"name": "Object 2", "level": level}]
-        second_query_results = [{"name": "Object 1", "level": level}, {"name": "Object 2", "level": level}, {"name": "Object 3", "level": level}, {"name": "Object 4", "level": level}]
+        first_query_results = [
+            {"name": "Object 1", "level": level},
+            {"name": "Object 2", "level": level},
+        ]
+        second_query_results = [
+            {"name": "Object 1", "level": level},
+            {"name": "Object 2", "level": level},
+            {"name": "Object 3", "level": level},
+            {"name": "Object 4", "level": level},
+        ]
 
         def first_results():
             yield from first_query_results
@@ -63,7 +73,7 @@ class TestObjectDAO(unittest.TestCase):
         dao = ObjectDao("ressources")
         dao.DB = self.mock_db
         dao.collection = self.mock_collection
-        read_filtered = dao.get_all_objects(level = level)
+        read_filtered = dao.get_all_objects(level=level)
         read_unfiltered = dao.get_all_objects()
 
         self.assertNotEqual(read_unfiltered, read_filtered)

@@ -3,12 +3,13 @@ import logging
 from pymongo.collection import Collection
 from pymongo.database import Database
 from pymongo.errors import PyMongoError
-from Object.EntityObject import EntityObject
-from Object.ConsommableObject import ConsommableObject
-from Object.RessourceObject import RessourceObject
-from Object.MontureObject import MontureObject
-from DAO.Connect import Connect
-from Utils.utils import get_all_links
+from object.entity_object import EntityObject
+from object.consommable_object import ConsommableObject
+from object.ressource_object import RessourceObject
+from object.monture_object import MontureObject
+from dao.connect import Connect
+from utils.utils import get_all_links
+
 
 class DB:
     def __init__(self, db_name: str):

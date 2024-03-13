@@ -1,4 +1,5 @@
-from DAO.DB import DB
+from dao.DB import DB
+
 
 class ObjectDao:
     def __init__(self, category: str):
@@ -15,23 +16,23 @@ class ObjectDao:
                 elif key == "effects_monture":
                     query["effects.level 1." + value] = {"$exists": True}
                 else:
-                    query[key] = { "$eq": value }
+                    query[key] = {"$eq": value}
 
             objects = list(self.collection.find(query).limit(limit))
         else:
             objects = list(self.collection.find().limit(limit))
 
         return objects
-    
-    def get_object_by_id(self, id: int,  **filters):
+
+    def get_object_by_id(self, id: int, **filters):
 
         if filters:
-            query = {"_id": { "$eq": id }}
+            query = {"_id": {"$eq": id}}
             for key, value in filters.items():
-                query[key] = { "$eq": value }
+                query[key] = {"$eq": value}
 
             objects = list(self.collection.find(query))
         else:
-            objects = list(self.collection.find({ "_id": f'{id}' }))
+            objects = list(self.collection.find({"_id": f"{id}"}))
 
         return objects

@@ -1,4 +1,5 @@
-from Scraper.EntityScraper import EntityScraper
+from scraper.entity_scraper import EntityScraper
+
 
 class RessourceScraper(EntityScraper):
     def __init__(self, url: str):
