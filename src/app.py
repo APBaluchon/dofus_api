@@ -89,6 +89,24 @@ async def get_all_metiers(limit: int = 10000, recette: str = None, recolte: str 
         filters["recolte"] = [recolte]
     return ObjectDao("metiers").get_all_objects(limit, **filters)
 
+@app.get("/equipements/{id}")
+async def get_metier_by_id(id: int):
+    return ObjectDao("equipements").get_object_by_id(id)[0]
+
+@app.get("/equipements/")
+async def get_all_metiers(limit: int = 10000, level: str = None, panoplie: str = None, effect: str = None, craft: str = None):
+    filters = {}
+
+    if level:
+        filters["level"] = level
+    if panoplie:
+        filters["panoplie"] = panoplie
+    if effect:
+        filters["effects"] = [effect]
+    if craft:
+        filters["crafts"] = [craft]
+    return ObjectDao("equipements").get_all_objects(limit, **filters)
+
 if __name__ == "__main__":
     import uvicorn
 
