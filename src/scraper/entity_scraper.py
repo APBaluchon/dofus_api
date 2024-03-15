@@ -169,10 +169,34 @@ class EntityScraper:
             return None
 
     def has_effects(self):
+        """
+        Vérifie s'il y a une catégorie effets dans la page'.
+        
+        Returns
+        -------
+        bool
+            True  s'il y a une catégorie effets dans la page, False sinon.
+        """
         return page_contains_category("Effets", self.soup)
 
     def has_conditions(self):
+        """
+        Vérifie s'il y a une catégorie conditions dans la page'.
+        
+        Returns
+        -------
+        bool
+            True  s'il y a une catégorie conditions dans la page, False sinon.
+        """
         return page_contains_category("Conditions", self.soup)
 
     def has_caracteristics(self):
+        """
+        Vérifie s'il y a une caractéristiques effets dans la page'.
+        
+        Returns
+        -------
+        bool
+            True  s'il y a une catégorie caractéristiques dans la page, False sinon.
+        """
         return page_contains_category("Caractéristiques", self.soup)

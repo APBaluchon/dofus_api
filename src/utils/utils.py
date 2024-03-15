@@ -204,93 +204,310 @@ def get_all_links(cat: str, filepath: str = None, starting_page: int = 1, nb_pag
                 file.write(link + '\n')
 
 def page_contains_category(cat: str, soup: BeautifulSoup) -> bool:
-    titles = soup.find_all('div', class_='ak-panel-title')
-    for title in titles:
-        if cat in title.get_text():
-            return True
-    return False
+    """
+    Vérifie si la page contient une catégorie donnée.
+
+    Parameters
+    ----------
+    cat : str
+        La catégorie à rechercher.
+    soup : BeautifulSoup
+        L'objet BeautifulSoup contenant le contenu de la page.
+
+    Returns
+    -------
+    bool
+        True si la catégorie est présente, False sinon.
+    """
+    try:
+        titles = soup.find_all('div', class_='ak-panel-title')
+        for title in titles:
+            if cat in title.get_text():
+                return True
+        return False
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
 
 def page_contains_tab(cat: str, soup: BeautifulSoup) -> bool:
-    titles = soup.find_all('div', class_='ak-container ak-tabs-container')
-    for title in titles:
-        if cat in title.get_text():
-            return True
-    return False
+    """
+    Vérifie si la page contient un onglet correspondant à une catégorie donnée.
+
+    Parameters
+    ----------
+    cat : str
+        La catégorie à rechercher.
+    soup : BeautifulSoup
+        L'objet BeautifulSoup contenant le contenu de la page.
+
+    Returns
+    -------
+    bool
+        True si l'onglet correspondant à la catégorie est présent, False sinon.
+    """
+    try:
+        titles = soup.find_all('div', class_='ak-container ak-tabs-container')
+        for title in titles:
+            if cat in title.get_text():
+                return True
+        return False
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
 
 def get_category_content(cat: str, soup: BeautifulSoup):
-    titles = soup.find_all('div', class_='ak-panel-title')
-    for title in titles:
-        if cat in title.get_text():
-            cat_content = title.find_next('div', class_='ak-panel-content')
-            return cat_content
-    return None
+    """
+    Récupère le contenu de la catégorie spécifiée dans la page BeautifulSoup.
+
+    Parameters
+    ----------
+    cat : str
+        La catégorie à rechercher.
+    soup : BeautifulSoup
+        L'objet BeautifulSoup contenant le contenu de la page.
+
+    Returns
+    -------
+    BeautifulSoup or None
+        Le contenu de la catégorie spécifiée si elle est présente, None sinon.
+    """
+    try:
+        titles = soup.find_all('div', class_='ak-panel-title')
+        for title in titles:
+            if cat in title.get_text():
+                cat_content = title.find_next('div', class_='ak-panel-content')
+                return cat_content
+        return None
+    except Exception as e:
+        print(f"Erreur lors de la récupération du contenu de la catégorie {cat}: {e}")
+        return None
 
 def converts_effects_to_dict(effects: list) -> dict:
+    """
+    Convertit une liste d'effets en un dictionnaire.
+
+    Parameters
+    ----------
+    effects : list
+        La liste des effets à convertir.
+
+    Returns
+    -------
+    dict
+        Le dictionnaire contenant les effets convertis.
+
+    Examples
+    --------
+    >>> effects = ["+10 Force", "+5 Agilité", "10 à 20 Vitalité"]
+    >>> converts_effects_to_dict(effects)
+    {'Force': 10, 'Agilité': 5, 'Vitalité': {'from': 10, 'to': 20}}
+    """
     dict_effects = {}
-    if effects is not None:
-        for effect in effects:
-            effect = effect.replace("{~ps}{~zs}", "")
-            if "+" in effect:
-                stat = find_good_stat(effect)
-                dict_effects[stat] = get_nth_number(effect, 1)
-            else:
-                if "à" in effect:
+    try:
+        if effects is not None:
+            for effect in effects:
+                effect = effect.replace("{~ps}{~zs}", "")
+                if "+" in effect:
                     stat = find_good_stat(effect)
-                    if stat is not None:
-                        dict_effects[stat] = {
-                            "from": get_nth_number(effect, 1),
-                            "to": get_nth_number(effect, 2)
-                        }
-                    dict_effects[stat] = {
-                        "from": get_nth_number(effect, 1),
-                        "to": get_nth_number(effect, 2)
-                    }
+                    dict_effects[stat] = get_nth_number(effect, 1)
                 else:
-                    stat = find_good_stat(effect)
-                    if stat in stats_without_number:
-                        dict_effects[stat] = effect
-                    else:
+                    if "à" in effect:
+                        stat = find_good_stat(effect)
                         if stat is not None:
-                            dict_effects[stat] = get_nth_number(effect, 1)
-            
+                            dict_effects[stat] = {
+                                "from": get_nth_number(effect, 1),
+                                "to": get_nth_number(effect, 2)
+                            }
+                    else:
+                        stat = find_good_stat(effect)
+                        if stat in stats_without_number:
+                            dict_effects[stat] = effect
+                        else:
+                            if stat is not None:
+                                dict_effects[stat] = get_nth_number(effect, 1)
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de la conversion des effets : {e}")
+    
     return dict_effects
 
 def converts_caracteristics_to_dict(caracteristics: list) -> dict:
+    """
+    Convertit une liste de caractéristiques en un dictionnaire.
+
+    Parameters
+    ----------
+    caracteristics : list
+        La liste des caractéristiques à convertir.
+
+    Returns
+    -------
+    dict
+        Le dictionnaire contenant les caractéristiques converties.
+
+    Examples
+    --------
+    >>> caracteristics = ["GÉNÉRATION: 2", "NOMBRE DE PODS: 100", "CAPTURABLE: Oui"]
+    >>> converts_caracteristics_to_dict(caracteristics)
+    {'Génération': 2, 'Nombre de pods': 100, 'Capturable': 'Oui'}
+    """
     caracteristics_dict = {}
-    if caracteristics is not None:
-        for caract in caracteristics:
-            caracteristic = find_good_caracteristic(caract)
-            if contains_number(caract):
-                caracteristics_dict[caracteristic] = get_nth_number(caract, 1)
-            else:
-                if "Non" in caract:
-                    caracteristics_dict[caracteristic] = "Non"
-                elif "Oui" in caract:
-                    caracteristics_dict[caracteristic] = "Oui"
+    try:
+        if caracteristics is not None:
+            for caract in caracteristics:
+                caracteristic = find_good_caracteristic(caract)
+                if contains_number(caract):
+                    caracteristics_dict[caracteristic] = get_nth_number(caract, 1)
+                else:
+                    if "Non" in caract:
+                        caracteristics_dict[caracteristic] = "Non"
+                    elif "Oui" in caract:
+                        caracteristics_dict[caracteristic] = "Oui"
+    except Exception as e:
+        print(f"Error converting caracteristics: {e}")
     return caracteristics_dict
 
 def get_nth_number(s: str, n: int) -> int:
-    numbers = [int(num) for num in re.findall(r'-?\d+', s)]
-    return numbers[n - 1] if len(numbers) >= n else 0
+    """
+    Récupère le n-ième nombre dans une chaîne de caractères.
+
+    Parameters
+    ----------
+    s : str
+        La chaîne de caractères dans laquelle chercher le nombre.
+    n : int
+        Le numéro du nombre à récupérer.
+
+    Returns
+    -------
+    int
+        Le n-ième nombre trouvé dans la chaîne, ou 0 si aucun nombre n'est trouvé.
+
+    Examples
+    --------
+    >>> get_nth_number("Il y a 10 pommes dans le panier", 1)
+    10
+    >>> get_nth_number("Il y a 10 pommes dans le panier", 2)
+    0
+    """
+    try:
+        numbers = [int(num) for num in re.findall(r'-?\d+', s)]
+        return numbers[n - 1] if len(numbers) >= n else 0
+    except:
+        return 0
 
 
 def contains_number(s: str) -> bool:
-    return any(char.isdigit() for char in s)
+    """
+    Vérifie si une chaîne de caractères contient un nombre.
+
+    Parameters
+    ----------
+    s : str
+        La chaîne de caractères à vérifier.
+
+    Returns
+    -------
+    bool
+        True si la chaîne contient un nombre, False sinon.
+
+    Examples
+    --------
+    >>> contains_number("Il y a 10 pommes dans le panier")
+    True
+    >>> contains_number("Il y a dix pommes dans le panier")
+    False
+    """
+    try:
+        return any(char.isdigit() for char in s)
+    except TypeError:
+        return False
 
 def find_good_stat(s: str) -> str:
-    for stat in available_stat:
-        if stat in s.upper():
-            return available_stat[stat]
-        
+    """
+    Trouve la bonne statistique correspondante à une chaîne de caractères.
+
+    Parameters
+    ----------
+    s : str
+        La chaîne de caractères à rechercher.
+
+    Returns
+    -------
+    str
+        La statistique correspondante si elle est trouvée, sinon une chaîne vide.
+
+    Examples
+    --------
+    >>> find_good_stat("Dommages d'armes")
+    "Dommages d'armes"
+    >>> find_good_stat("Force")
+    "Force"
+    """
+    try:
+        for stat in available_stat:
+            if stat in s.upper():
+                return available_stat[stat]
+    except Exception as e:
+        print(f"Error finding good stat: {e}")
+        return ""
+
 def find_good_caracteristic(s: str) -> str:
-    for caract in caracteristiques:
-        if caract in s.upper():
-            return caracteristiques[caract]
-        
+    """
+    Trouve la bonne caractéristique correspondante à une chaîne de caractères.
+
+    Parameters
+    ----------
+    s : str
+        La chaîne de caractères à rechercher.
+
+    Returns
+    -------
+    str
+        La caractéristique correspondante si elle est trouvée, sinon une chaîne vide.
+
+    Examples
+    --------
+    >>> find_good_caracteristic("GÉNÉRATION")
+    "Génération"
+    >>> find_good_caracteristic("VITESSE DE DÉPLACEMENT")
+    "Vitesse de déplacement"
+    """
+    try:
+        for caract in caracteristiques:
+            if caract in s.upper():
+                return caracteristiques[caract]
+    except Exception as e:
+        print(f"Error finding good caracteristic: {e}")
+        return ""
+
 def add_spaces(s: str) -> str:
-    s = s.replace("+", "+ ")
-    s = s.replace("-", "- ")
-    return s
+    """
+    Ajoute des espaces autour des signes "+" et "-".
+
+    Parameters
+    ----------
+    s : str
+        La chaîne de caractères à modifier.
+
+    Returns
+    -------
+    str
+        La chaîne de caractères modifiée avec des espaces autour des signes "+" et "-".
+
+    Examples
+    --------
+    >>> add_spaces("+10 Force")
+    "+ 10 Force"
+    >>> add_spaces("-5 Agilité")
+    "- 5 Agilité"
+    """
+    try:
+        s = s.replace("+", "+ ")
+        s = s.replace("-", "- ")
+        return s
+    except Exception as e:
+        print(f"Error adding spaces: {e}")
+        return ""
 
 def get_all_links_from_page_metiers(page: int) -> set:
     """

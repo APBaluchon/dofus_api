@@ -20,12 +20,11 @@ class DB:
     Classe pour interagir avec une base de données MongoDB.
 
     Attributes:
-        db_name (str): Nom de la base de données.
         db (Database): Connexion à la base de données.
 
     Methods:
-        __init__(db_name: str) -> None:
-            Initialise une instance de la classe DB avec le nom de la base de données.
+        __init__() -> None:
+            Initialise une instance de la classe DB.
 
         get_collection(collection_name: str) -> Optional[Collection]:
             Récupère une collection de la base de données.
@@ -48,12 +47,9 @@ class DB:
         fill(cat: str) -> None:
             Remplit la base de données avec les entités provenant des liens de la catégorie spécifiée.
     """
-    def __init__(self, db_name: str):
+    def __init__(self):
         """
         Initialise une instance de la classe DB avec le nom de la base de données.
-
-        Args:
-            db_name (str): Le nom de la base de données.
         """
         self.db = Connect().db
 
@@ -87,6 +83,8 @@ class DB:
                 collection.insert_one(data.to_json())
             except PyMongoError as e:
                 logging.error(f"Error inserting entity: {e}")
+        else:
+            logging.error("Invalid collection name")
 
     def replace_entity(self, collection_name: str, entity_id: str, data: EntityObject):
         """
@@ -103,6 +101,8 @@ class DB:
                 collection.replace_one({"_id": entity_id}, data.to_json())
             except PyMongoError as e:
                 logging.error(f"Error replacing entity: {e}")
+        else:
+            logging.error("Invalid collection name")
 
     def entity_exists(self, collection_name: str, entity_id: str) -> bool:
         """
