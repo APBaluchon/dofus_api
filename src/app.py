@@ -112,4 +112,4 @@ async def get_all_equipements(limit: int = 10000, level: str = None, type: str =
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="localhost", port=8000)
