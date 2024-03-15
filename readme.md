@@ -14,6 +14,8 @@ When the app is running, you can find the API swagger on [http://0.0.0.0:8000/do
 
 Once you're done using the app, you can run `docker compose down` to stop the docker container running the Mongo database. 
 
+> If you wish to run the app without docker, switch to the branch `without-docker` with `git checkout without-docker` and follow the instructions on the `readme.md`.
+
 # How to use the app
 
 Once you're on the swagger, you can get data from several categories of the Dofus game, which you can filter (all the filters available are listed in the swagger).

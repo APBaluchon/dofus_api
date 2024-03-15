@@ -25,5 +25,5 @@ COPY ./data/init-mongo.sh /docker-entrypoint-initdb.d/init-mongo.sh
 # Set execute permissions for the script
 RUN chmod +x /docker-entrypoint-initdb.d/init-mongo.sh
 
-# Run app.py when the container launches
+# Run the script when the container launches
 CMD ["bash", "-c", "/docker-entrypoint-initdb.d/init-mongo.sh"]
