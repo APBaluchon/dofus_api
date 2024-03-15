@@ -14,6 +14,14 @@ When the app is running, you can find the API swagger on [http://0.0.0.0:8000/do
 
 Once you're done using the app, you can run `docker compose down` to stop the docker container running the Mongo database. 
 
+# How to use the app
+
+Once you're on the swagger, you can get data from several categories of the Dofus game, which you can filter (all the filters available are listed in the swagger).
+
+Let's say you're looking for a monster which drops some "Viande Goûtue", go on [http://0.0.0.0:8000/monstres/?drops=Viande%20Go%C3%BBtue](http://0.0.0.0:8000/monstres/?drops=Viande%20Go%C3%BBtue) to know what monster to farm to get your meat.
+
+Now you're someone busy and you don't have time to go far away for your meat, you can also add a filter on the area to know where to find some tasteful meat in your area: [http://0.0.0.0:8000/monstres/?drops=Viande%20Go%C3%BBtue&zone=Temple%20de%20Kerubim](http://0.0.0.0:8000/monstres/?drops=Viande%20Go%C3%BBtue&zone=Temple%20de%20Kerubim)
+
 # Roadmap
 
 - [x] Ressources
@@ -159,3 +167,7 @@ classDiagram
     }
 
 ```
+
+# Run tests
+
+You can run the project's tests with `python -m unittest discover src`.
