@@ -3,6 +3,7 @@ Project to create a NoSql database with the entire Dofus encyclopaedia, with the
 
 # Quick Start
 > :warning: You will need to have Docker installed and might need to run the docker commands with administrator privileges.
+> 
 > :warning: If you're on a windows environment, run the command `git config --global core.autocrlf input` before cloning the project to ensure the compatibility of the script that initializes tha database.
 
 - Install poetry, with `pip install poetry`for instance.
