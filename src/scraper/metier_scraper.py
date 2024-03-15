@@ -3,11 +3,39 @@ from utils import utils
 
 
 class MetierScraper(EntityScraper):
+    """
+    Cette classe permet de scraper les informations spécifiques à un métier sur un site web.
+
+    Args:
+        url (str): L'URL de la page web du métier à scraper.
+
+    Methods:
+        get_description() -> str:
+            Récupère et retourne la description du métier.
+
+        has_recoltes() -> bool:
+            Vérifie si la page contient des informations sur les récoltes du métier.
+
+        has_recettes() -> bool:
+            Vérifie si la page contient des informations sur les recettes du métier.
+
+        get_recoltes() -> dict:
+            Récupère et retourne un dictionnaire des récoltes du métier avec leur niveau associé.
+
+        get_recettes() -> dict:
+            Récupère et retourne un dictionnaire des recettes du métier avec leur niveau associé.
+    """
 
     def __init__(self, url: str):
         super().__init__(url)
 
     def get_description(self) -> str:
+        """
+        Récupère la description du métier depuis le contenu de la page Web.
+
+        Returns:
+            str: La description du métier.
+        """
         desc = (
             self.soup.find("div", class_="ak-panel-content")
             .find("p")
@@ -16,12 +44,30 @@ class MetierScraper(EntityScraper):
         return desc
 
     def has_recoltes(self):
+        """
+        Vérifie si la page contient des informations sur les récoltes.
+
+        Returns:
+            bool: True si des récoltes sont présentes, sinon False.
+        """
         return utils.page_contains_tab("Récoltes", self.soup)
 
     def has_recettes(self):
+        """
+        Vérifie si la page contient des informations sur les recettes.
+
+        Returns:
+            bool: True si des recettes sont présentes, sinon False.
+        """
         return utils.page_contains_tab("Recettes", self.soup)
 
     def get_recoltes(self) -> dict:
+        """
+        Récupère les informations sur les récoltes depuis la page Web.
+
+        Returns:
+            dict: Un dictionnaire contenant les récoltes avec leurs niveaux associés.
+        """
         if not self.has_recoltes():
             return None
         rows_recolte = self.soup.find("tbody").find_all("tr")
@@ -35,6 +81,12 @@ class MetierScraper(EntityScraper):
         return recoltes
 
     def get_recettes(self) -> dict:
+        """
+        Récupère les informations sur les recettes depuis la page Web.
+
+        Returns:
+            dict: Un dictionnaire contenant les recettes avec leurs niveaux associés.
+        """
         if not self.has_recettes():
             return None
 

@@ -16,10 +16,57 @@ from utils import utils
 
 
 class DB:
+    """
+    Classe pour interagir avec une base de données MongoDB.
+
+    Attributes:
+        db_name (str): Nom de la base de données.
+        db (Database): Connexion à la base de données.
+
+    Methods:
+        __init__(db_name: str) -> None:
+            Initialise une instance de la classe DB avec le nom de la base de données.
+
+        get_collection(collection_name: str) -> Optional[Collection]:
+            Récupère une collection de la base de données.
+
+        insert_entity(collection_name: str, data: EntityObject) -> None:
+            Insère une entité dans la collection spécifiée.
+
+        replace_entity(collection_name: str, entity_id: str, data: EntityObject) -> None:
+            Remplace une entité existante dans la collection spécifiée.
+
+        entity_exists(collection_name: str, entity_id: str) -> bool:
+            Vérifie si une entité avec l'ID spécifié existe dans la collection spécifiée.
+
+        insert_with_url(collection_name: str, url: str) -> None:
+            Insère une entité dans la collection spécifiée en utilisant une URL.
+
+        insert_many_entities(collection_name: str, data: List[EntityObject]) -> None:
+            Insère plusieurs entités dans la collection spécifiée.
+
+        fill(cat: str) -> None:
+            Remplit la base de données avec les entités provenant des liens de la catégorie spécifiée.
+    """
     def __init__(self, db_name: str):
+        """
+        Initialise une instance de la classe DB avec le nom de la base de données.
+
+        Args:
+            db_name (str): Le nom de la base de données.
+        """
         self.db = Connect().db
 
     def get_collection(self, collection_name: str) -> Optional[Collection]:
+        """
+        Récupère une collection de la base de données.
+
+        Args:
+            collection_name (str): Le nom de la collection à récupérer.
+
+        Returns:
+            Optional[Collection]: La collection récupérée, ou None si une erreur survient.
+        """
         try:
             return self.db[collection_name]
         except PyMongoError as e:
@@ -27,6 +74,13 @@ class DB:
             return None
 
     def insert_entity(self, collection_name: str, data: EntityObject):
+        """
+        Insère une entité dans la collection spécifiée.
+
+        Args:
+            collection_name (str): Le nom de la collection dans laquelle insérer l'entité.
+            data (EntityObject): L'objet représentant l'entité à insérer.
+        """
         collection = self.get_collection(collection_name)
         if collection is not None:
             try:
@@ -35,6 +89,14 @@ class DB:
                 logging.error(f"Error inserting entity: {e}")
 
     def replace_entity(self, collection_name: str, entity_id: str, data: EntityObject):
+        """
+        Remplace une entité existante dans la collection spécifiée.
+
+        Args:
+            collection_name (str): Le nom de la collection dans laquelle remplacer l'entité.
+            entity_id (str): L'identifiant de l'entité à remplacer.
+            data (EntityObject): L'objet représentant la nouvelle entité.
+        """
         collection = self.get_collection(collection_name)
         if collection is not None:
             try:
@@ -43,12 +105,29 @@ class DB:
                 logging.error(f"Error replacing entity: {e}")
 
     def entity_exists(self, collection_name: str, entity_id: str) -> bool:
+        """
+        Vérifie si une entité avec l'identifiant donné existe dans la collection spécifiée.
+
+        Args:
+            collection_name (str): Le nom de la collection à vérifier.
+            entity_id (str): L'identifiant de l'entité à rechercher.
+
+        Returns:
+            bool: True si l'entité existe, False sinon.
+        """
         collection = self.get_collection(collection_name)
         if collection is not None:
             return collection.find_one({"_id": entity_id}) is not None
         return False
 
     def insert_with_url(self, collection_name: str, url: str):
+        """
+        Insère une entité dans la collection spécifiée en fonction de l'URL fournie.
+
+        Args:
+            collection_name (str): Le nom de la collection dans laquelle insérer l'entité.
+            url (str): L'URL à partir de laquelle créer l'entité.
+        """
         if collection_name == "consommables":
             entity = ConsommableObject(url)
         elif collection_name == "ressources":
@@ -75,6 +154,13 @@ class DB:
             self.insert_entity(collection_name, entity)
 
     def insert_many_entities(self, collection_name: str, data: List[EntityObject]):
+        """
+        Insère plusieurs entités dans la collection spécifiée.
+
+        Args:
+            collection_name (str): Le nom de la collection dans laquelle insérer les entités.
+            data (List[EntityObject]): La liste des objets représentant les entités à insérer.
+        """
         collection = self.get_collection(collection_name)
         if collection is not None:
             try:
@@ -83,6 +169,12 @@ class DB:
                 logging.error(f"Error inserting many entities: {e}")
 
     def fill(self, cat: str):
+        """
+        Remplit la base de données avec des entités de la catégorie spécifiée.
+
+        Args:
+            cat (str): La catégorie à remplir.
+        """
         utils.get_all_links(cat, "src/links/temp_links.txt")
         links = open("src/links/temp_links.txt", "r").read().split("\n")
         for url in links:

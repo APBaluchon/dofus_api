@@ -3,6 +3,40 @@ from utils import utils
 
 
 class MonstreScraper(EntityScraper):
+    """
+    Cette classe permet de scraper les informations spécifiques à un monstre sur une page web donnée.
+
+    Args:
+        url (str): L'URL de la page web du monstre à scraper.
+
+    Attributes:
+        url (str): L'URL de la page web du monstre.
+
+    Methods:
+        get_type() -> str:
+            Récupère et retourne le type du monstre.
+
+        get_zone() -> str:
+            Récupère et retourne la zone où l'on peut trouver le monstre.
+
+        get_level() -> dict:
+            Récupère et retourne les niveaux minimum et maximum du monstre.
+
+        get_image() -> str:
+            Récupère et retourne l'URL de l'image du monstre.
+
+        get_drops() -> dict:
+            Récupère et retourne les drops du monstre avec leur pourcentage de drop.
+
+        has_zone() -> bool:
+            Vérifie si la page contient des informations sur la zone du monstre.
+
+        get_characteristics() -> dict:
+            Récupère et retourne les caractéristiques du monstre (PV, PA, PM).
+
+        get_resistances() -> dict:
+            Récupère et retourne les résistances du monstre aux différents éléments (Terre, Air, Feu, Eau, Neutre).
+    """
 
     def __init__(self, url: str):
         super().__init__(url)

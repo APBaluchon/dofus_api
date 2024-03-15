@@ -7,10 +7,30 @@ from utils.utils import (
 
 
 class MontureScraper(EntityScraper):
+    """
+    Cette classe permet de scraper les informations spécifiques à unu monture sur une page web donnée.
+
+    Args:
+        url (str): L'URL de la page web de la monture à scraper.
+
+    Attributes:
+        url (str): L'URL de la page web de la monture.
+
+    Methods:
+        get_effects_and_caracteristics() -> tuple:
+            Récupère les effets et caractéristiques de la monture.
+    """
     def __init__(self, url):
         super().__init__(url + "?level=1")
 
     def get_effects_and_caracteristics(self):
+        """
+        Récupère les effets et caractéristiques de la monture.
+
+        Returns:
+            tuple: Un tuple contenant deux dictionnaires, le premier pour les effets et le second pour les caractéristiques.
+
+        """
         try:
             if self.has_effects() or self.has_caracteristics():
                 effects = {}
