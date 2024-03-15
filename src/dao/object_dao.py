@@ -3,7 +3,7 @@ from dao.DB import DB
 
 class ObjectDao:
     def __init__(self, category: str):
-        self.DB = DB("dofusdb")
+        self.DB = DB()
         self.collection = self.DB.get_collection(category)
 
     def get_all_objects(self, limit: int = 10000, **filters) -> list:

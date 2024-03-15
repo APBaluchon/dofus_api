@@ -16,7 +16,7 @@ from utils import utils
 
 
 class DB:
-    def __init__(self, db_name: str):
+    def __init__(self):
         self.db = Connect().db
 
     def get_collection(self, collection_name: str) -> Optional[Collection]:
