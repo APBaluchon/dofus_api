@@ -122,10 +122,15 @@ sequenceDiagram
     note over U, S: Possibility to add filters
 ```
 
-# Class diagram (not done yet)
+# Class diagram
 
 ```mermaid
 classDiagram
+    direction LR
+    DAO ..> Utils
+    Object ..> Utils
+    Scraper ..> Utils
+    Object ..> Scraper
     class DAO{
         +get_all_objects(**filters)
         +get_object_by_id(id: int)
