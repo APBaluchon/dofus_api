@@ -22,6 +22,10 @@ Let's say you're looking for a monster which drops some "Viande Goûtue", go on 
 
 Now you're someone busy and you don't have time to go far away for your meat, you can also add a filter on the area to know where to find some tasteful meat in your area: [http://0.0.0.0:8000/monstres/?drops=Viande%20Go%C3%BBtue&zone=Temple%20de%20Kerubim](http://0.0.0.0:8000/monstres/?drops=Viande%20Go%C3%BBtue&zone=Temple%20de%20Kerubim)
 
+# Run tests
+
+You can run the project's tests with `python -m unittest discover src`.
+
 # Roadmap
 
 - [x] Ressources
@@ -101,7 +105,7 @@ erDiagram
     }
 ```
 
-# Interaction diagram
+# Interaction diagram
 
 ```mermaid
 sequenceDiagram
@@ -119,9 +123,6 @@ sequenceDiagram
 # Class diagram (not done yet)
 
 ```mermaid
----
-title: Class diagram
----
 classDiagram
     class DAO{
         +get_all_objects(**filters)
@@ -167,7 +168,3 @@ classDiagram
     }
 
 ```
-
-# Run tests
-
-You can run the project's tests with `python -m unittest discover src`.
