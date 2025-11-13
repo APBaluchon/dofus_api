@@ -1,3 +1,5 @@
+from typing import Optional
+
 from dao.DB import DB
 
 
@@ -27,31 +29,36 @@ class ObjectDao:
             list: Une liste d'objets correspondant aux critères spécifiés.
         """
 
-        if filters:
-            query = {}
-            for key, value in filters.items():
-                if key == "effects":
-                    query["effects." + value[0]] = {"$exists": True}
-                elif key == "effects_monture":
-                    query["effects.level 1." + value] = {"$exists": True}
-                elif key == "drops":
-                    query["drops." + value[0]] = {"$exists": True}
-                elif key == "recolte":
-                    query["recoltes." + value[0]] = {"$exists": True}
-                elif key == "recette":
-                    query["recettes." + value[0]] = {"$exists": True}
-                elif key == "crafts":
-                    query["crafts." + value[0]] = {"$exists": True}
-                else:
-                    query[key] = {"$eq": value}
+        collection = self.collection
+        if collection is None:
+            return []
 
-            objects = list(self.collection.find(query).limit(limit))
-        else:
-            objects = list(self.collection.find().limit(limit))
+        if not filters:
+            return list(collection.find().limit(limit))
 
-        return objects
+        query = {}
+        for key, value in filters.items():
+            if value is None:
+                continue
 
-    def get_object_by_id(self, id: int, **filters):
+            if key == "effects":
+                query[f"effects.{value}"] = {"$exists": True}
+            elif key == "effects_monture":
+                query[f"effects.level 1.{value}"] = {"$exists": True}
+            elif key in {"drops", "recolte", "recette", "crafts"}:
+                field_mapping = {
+                    "drops": "drops",
+                    "recolte": "recoltes",
+                    "recette": "recettes",
+                    "crafts": "crafts",
+                }
+                query[f"{field_mapping[key]}.{value}"] = {"$exists": True}
+            else:
+                query[key] = {"$eq": value}
+
+        return list(collection.find(query).limit(limit))
+
+    def get_object_by_id(self, id: str, **filters) -> Optional[dict]:
         """
         Récupère un objet spécifique de la base de données par son identifiant.
 
@@ -63,13 +70,19 @@ class ObjectDao:
             list: Une liste d'objets correspondant à l'identifiant spécifié et aux filtres donnés.
         """
 
-        if filters:
-            query = {"_id": {"$eq": id}}
-            for key, value in filters.items():
-                query[key] = {"$eq": value}
+        collection = self.collection
+        if collection is None:
+            return None
 
-            objects = list(self.collection.find(query))
-        else:
-            objects = list(self.collection.find({"_id": f"{id}"}))
+        str_id = str(id)
+        query = {"_id": str_id}
+        for key, value in filters.items():
+            query[key] = {"$eq": value}
 
-        return objects
+        document = collection.find_one(query)
+        if document is None and str_id.isdigit():
+            numeric_id = int(str_id)
+            query["_id"] = numeric_id
+            document = collection.find_one(query)
+
+        return document

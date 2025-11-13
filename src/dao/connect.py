@@ -27,12 +27,17 @@ class Connect:
         self.MONGODB_PASSWORD = MONGODB_PASSWORD
         self.MONGODB_DATABASE = MONGODB_DATABASE
 
-        self.client = MongoClient(
-            host=self.MONGODB_HOST,
-            port=self.MONGODB_PORT,
-            username=self.MONGODB_USERNAME,
-            password=self.MONGODB_PASSWORD,
-        )
+        client_kwargs = {
+            "host": self.MONGODB_HOST,
+            "port": self.MONGODB_PORT,
+        }
+
+        if self.MONGODB_USERNAME:
+            client_kwargs["username"] = self.MONGODB_USERNAME
+        if self.MONGODB_PASSWORD:
+            client_kwargs["password"] = self.MONGODB_PASSWORD
+
+        self.client = MongoClient(**client_kwargs)
         self.db = self.client[self.MONGODB_DATABASE]
 
     def close(self):
