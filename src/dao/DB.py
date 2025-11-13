@@ -178,7 +178,17 @@ class DB:
         """
         utils.get_all_links(cat, "src/links/temp_links.txt")
         with open("src/links/temp_links.txt", "r", encoding="utf-8") as link_file:
-            links = link_file.read().split("\n")
+            raw_links = link_file.read().split("\n")
+
+        seen_links = set()
+        links = []
+        for raw_url in raw_links:
+            url = raw_url.strip()
+            if not url or url in seen_links:
+                continue
+            seen_links.add(url)
+            links.append(url)
+
         for url in links:
             attempts = 0
             backoff = 60

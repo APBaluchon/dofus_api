@@ -30,6 +30,7 @@ def _get_int_env(name: str, default: int) -> int:
         return default
 
 
+MONGODB_URI = _get_env("MONGODB_URI")
 MONGODB_HOST = _get_env("MONGODB_HOST", "localhost")
 MONGODB_PORT = _get_int_env("MONGODB_PORT", 27017)
 MONGODB_USERNAME = _get_env("MONGODB_USERNAME")

@@ -1,23 +1,41 @@
+import logging
 from typing import Optional
 
 from dao.DB import DB
+from pymongo.errors import PyMongoError
 
 
 class ObjectDao:
+    """Data access helper for Mongo collections."""
+
+    DEFAULT_LIMIT = 10000
+
     def __init__(self, category: str):
         """
         Initialise un objet ObjectDao avec une catégorie spécifique.
 
         Args:
             category (str): La catégorie des objets à récupérer.
-
-        Returns:
-            None
         """
+
         self.DB = DB()
         self.collection = self.DB.get_collection(category)
 
-    def get_all_objects(self, limit: int = 10000, **filters) -> list:
+    @staticmethod
+    def _sanitize_limit(limit: int) -> int:
+        """Retourne un plafond de résultats sûr pour MongoDB."""
+
+        try:
+            numeric_limit = int(limit)
+        except (TypeError, ValueError):
+            return ObjectDao.DEFAULT_LIMIT
+
+        if numeric_limit <= 0:
+            return ObjectDao.DEFAULT_LIMIT
+
+        return min(numeric_limit, ObjectDao.DEFAULT_LIMIT)
+
+    def get_all_objects(self, limit: int = DEFAULT_LIMIT, **filters) -> list:
         """
         Récupère tous les objets de la base de données selon les filtres spécifiés.
 
@@ -33,8 +51,14 @@ class ObjectDao:
         if collection is None:
             return []
 
+        limit_value = self._sanitize_limit(limit)
+
         if not filters:
-            return list(collection.find().limit(limit))
+            try:
+                return list(collection.find().limit(limit_value))
+            except PyMongoError as err:
+                logging.error("Error while listing %s: %s", self.collection.name, err)
+                return []
 
         query = {}
         for key, value in filters.items():
@@ -56,7 +80,16 @@ class ObjectDao:
             else:
                 query[key] = {"$eq": value}
 
-        return list(collection.find(query).limit(limit))
+        try:
+            return list(collection.find(query).limit(limit_value))
+        except PyMongoError as err:
+            logging.error(
+                "Error while querying %s with filters %s: %s",
+                self.collection.name,
+                filters,
+                err,
+            )
+            return []
 
     def get_object_by_id(self, id: str, **filters) -> Optional[dict]:
         """
@@ -67,7 +100,7 @@ class ObjectDao:
             **filters: Des filtres optionnels pour affiner la recherche.
 
         Returns:
-            list: Une liste d'objets correspondant à l'identifiant spécifié et aux filtres donnés.
+            dict | None: L'objet correspondant ou None s'il est absent.
         """
 
         collection = self.collection
@@ -79,10 +112,24 @@ class ObjectDao:
         for key, value in filters.items():
             query[key] = {"$eq": value}
 
-        document = collection.find_one(query)
+        try:
+            document = collection.find_one(query)
+        except PyMongoError as err:
+            logging.error("Error while fetching %s/%s: %s", self.collection.name, str_id, err)
+            return None
+
         if document is None and str_id.isdigit():
             numeric_id = int(str_id)
             query["_id"] = numeric_id
-            document = collection.find_one(query)
+            try:
+                document = collection.find_one(query)
+            except PyMongoError as err:
+                logging.error(
+                    "Error while fetching %s/%s as numeric: %s",
+                    self.collection.name,
+                    numeric_id,
+                    err,
+                )
+                return None
 
         return document

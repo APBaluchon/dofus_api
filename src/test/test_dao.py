@@ -12,6 +12,7 @@ class TestObjectDAO(unittest.TestCase):
         )  # Ensure the cursor is chainable
         self.mock_collection = MagicMock()
         self.mock_collection.find.return_value = self.mock_cursor
+        self.mock_collection.name = "ressources"
         self.mock_db = MagicMock()
         self.mock_db.get_collection.return_value = self.mock_collection
 
@@ -78,6 +79,17 @@ class TestObjectDAO(unittest.TestCase):
 
         self.assertNotEqual(read_unfiltered, read_filtered)
         self.assertIsNotNone(read_filtered)
+
+    def test_read_all_invalid_limit_defaults(self):
+        self.mock_cursor.limit.reset_mock()
+
+        dao = ObjectDao("ressources")
+        dao.DB = self.mock_db
+        dao.collection = self.mock_collection
+
+        dao.get_all_objects(limit=-5)
+
+        self.mock_cursor.limit.assert_called_with(ObjectDao.DEFAULT_LIMIT)
 
 
 if __name__ == "__main__":
