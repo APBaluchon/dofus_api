@@ -1,6 +1,7 @@
 from typing import List, Optional
 import logging
 import time
+from requests.exceptions import HTTPError
 from pymongo.collection import Collection
 from pymongo.database import Database
 from pymongo.errors import PyMongoError
@@ -176,12 +177,52 @@ class DB:
             cat (str): La catégorie à remplir.
         """
         utils.get_all_links(cat, "src/links/temp_links.txt")
-        links = open("src/links/temp_links.txt", "r").read().split("\n")
+        with open("src/links/temp_links.txt", "r", encoding="utf-8") as link_file:
+            raw_links = link_file.read().split("\n")
+
+        seen_links = set()
+        links = []
+        for raw_url in raw_links:
+            url = raw_url.strip()
+            if not url or url in seen_links:
+                continue
+            seen_links.add(url)
+            links.append(url)
+
         for url in links:
-            while True:
+            attempts = 0
+            backoff = 60
+            while attempts < 3:
                 try:
                     self.insert_with_url(cat, url)
                     break
-                except Exception as e:
-                    print(e, "Retrying in 3 minutes")
-                    time.sleep(180)
+                except AttributeError as err:
+                    logging.error("Fatal error while parsing %s: %s", url, err)
+                    break
+                except HTTPError as err:
+                    status = err.response.status_code if err.response else "unknown"
+                    if status in {401, 403, 404}:
+                        logging.error(
+                            "Skipping %s after HTTP error %s: %s", url, status, err
+                        )
+                        break
+                    attempts += 1
+                    logging.warning(
+                        "HTTP error while fetching %s (attempt %s/3): %s",
+                        url,
+                        attempts,
+                        err,
+                    )
+                except Exception as err:  # pragma: no cover - best effort logging
+                    attempts += 1
+                    logging.warning(
+                        "Error while inserting %s (attempt %s/3): %s", url, attempts, err
+                    )
+
+                if attempts >= 3:
+                    logging.error("Giving up on %s after %s attempts", url, attempts)
+                    break
+
+                logging.info("Retrying %s in %s seconds", url, backoff)
+                time.sleep(backoff)
+                backoff *= 2

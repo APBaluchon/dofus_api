@@ -1,9 +1,7 @@
+import logging
+
 from scraper.entity_scraper import EntityScraper
-from utils.utils import (
-    get_category_content,
-    page_contains_category,
-    get_content_page,
-)
+from utils.utils import get_category_content, page_contains_category, get_content_page
 
 
 class MontureScraper(EntityScraper):
@@ -31,59 +29,50 @@ class MontureScraper(EntityScraper):
             tuple: Un tuple contenant deux dictionnaires, le premier pour les effets et le second pour les caractéristiques.
 
         """
-        try:
-            if self.has_effects() or self.has_caracteristics():
-                effects = {}
-                caracts = {}
-                for i in range(1, 101):
-                    self.url = self.url.split("=")[0] + "=" + str(i)
-                    self.soup = get_content_page(self.url)
-                    print(self.url)
-                    if page_contains_category(
-                        "Effets", self.soup
-                    ) and page_contains_category("Caractéristiques", self.soup):
-                        effects[f"level {i}"] = (
-                            get_category_content("Effets", self.soup).get_text().strip()
-                        )
-                        effects[f"level {i}"] = [
-                            e.strip()
-                            for e in effects[f"level {i}"].split("\n")
-                            if e.strip()
-                        ]
+        effects: dict[str, list[str]] = {}
+        caracts: dict[str, list[str]] = {}
 
-                        caracts[f"level {i}"] = (
-                            get_category_content("Caractéristiques", self.soup)
-                            .get_text()
-                            .strip()
-                        )
-                        caracts[f"level {i}"] = [
-                            e.strip()
-                            for e in caracts[f"level {i}"].split("\n")
-                            if e.strip()
-                        ]
-                    elif page_contains_category("Effets", self.soup):
-                        effects[f"level {i}"] = (
-                            get_category_content("Effets", self.soup).get_text().strip()
-                        )
-                        effects[f"level {i}"] = [
-                            e.strip()
-                            for e in effects[f"level {i}"].split("\n")
-                            if e.strip()
-                        ]
-                    elif page_contains_category("Caractéristiques", self.soup):
-                        caracts[f"level {i}"] = (
-                            get_category_content("Caractéristiques", self.soup)
-                            .get_text()
-                            .strip()
-                        )
-                        caracts[f"level {i}"] = [
-                            e.strip()
-                            for e in caracts[f"level {i}"].split("\n")
-                            if e.strip()
-                        ]
+        try:
+            if not (self.has_effects() or self.has_caracteristics()):
                 return effects, caracts
-            else:
-                return None
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return None
+
+            base_url = self.url.split("?")[0]
+
+            for level in range(1, 101):
+                page_url = f"{base_url}?level={level}"
+                soup = get_content_page(page_url)
+                if not soup or soup == "404":
+                    break
+
+                self.soup = soup
+
+                has_effects = page_contains_category("Effets", self.soup)
+                has_caracts = page_contains_category("Caractéristiques", self.soup)
+
+                if not has_effects and not has_caracts:
+                    break
+
+                if has_effects:
+                    raw_effects = get_category_content("Effets", self.soup).get_text().strip()
+                    effects[f"level {level}"] = [
+                        entry.strip()
+                        for entry in raw_effects.split("\n")
+                        if entry.strip()
+                    ]
+
+                if has_caracts:
+                    raw_caracts = (
+                        get_category_content("Caractéristiques", self.soup)
+                        .get_text()
+                        .strip()
+                    )
+                    caracts[f"level {level}"] = [
+                        entry.strip()
+                        for entry in raw_caracts.split("\n")
+                        if entry.strip()
+                    ]
+
+            return effects, caracts
+        except Exception as err:  # pragma: no cover - scraping dépend du réseau
+            logging.error("Error while scraping mount data %s: %s", self.url, err)
+            return effects, caracts

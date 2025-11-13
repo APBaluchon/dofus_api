@@ -12,6 +12,7 @@ class TestObjectDAO(unittest.TestCase):
         )  # Ensure the cursor is chainable
         self.mock_collection = MagicMock()
         self.mock_collection.find.return_value = self.mock_cursor
+        self.mock_collection.name = "ressources"
         self.mock_db = MagicMock()
         self.mock_db.get_collection.return_value = self.mock_collection
 
@@ -19,25 +20,25 @@ class TestObjectDAO(unittest.TestCase):
         ressource_id = 14144
         name = "Mycoses gelées"
 
-        self.mock_collection.find.return_value = [{"name": name}]
+        self.mock_collection.find_one.return_value = {"name": name}
 
         dao = ObjectDao("ressources")
         dao.DB = self.mock_db
         dao.collection = self.mock_collection
-        dao_name = dao.get_object_by_id(ressource_id)[0]["name"]
+        dao_name = dao.get_object_by_id(ressource_id)["name"]
 
         self.assertEqual(dao_name, name)
 
     def test_read_by_id_ko(self):
         ressource_id = 1414455
 
-        self.mock_collection.find.return_value = []
+        self.mock_collection.find_one.return_value = None
 
         dao = ObjectDao("ressources")
         dao.DB = self.mock_db
         dao.collection = self.mock_collection
 
-        self.assertEqual(dao.get_object_by_id(ressource_id), [])
+        self.assertIsNone(dao.get_object_by_id(ressource_id))
 
     def test_read_all_ok(self):
         self.mock_cursor.__iter__.return_value = [{"_id": 1}, {"_id": 2}, {"_id": 3}]
@@ -78,6 +79,17 @@ class TestObjectDAO(unittest.TestCase):
 
         self.assertNotEqual(read_unfiltered, read_filtered)
         self.assertIsNotNone(read_filtered)
+
+    def test_read_all_invalid_limit_defaults(self):
+        self.mock_cursor.limit.reset_mock()
+
+        dao = ObjectDao("ressources")
+        dao.DB = self.mock_db
+        dao.collection = self.mock_collection
+
+        dao.get_all_objects(limit=-5)
+
+        self.mock_cursor.limit.assert_called_with(ObjectDao.DEFAULT_LIMIT)
 
 
 if __name__ == "__main__":
